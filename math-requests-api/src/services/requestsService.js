@@ -2,12 +2,35 @@ const file_service = require("./fileService");
 
 let data_file_path;
 
+function normalize_request(request) {
+    if (!request) {
+        return request;
+    }
+
+    const normalized_request = {
+        ...request
+    };
+
+    if (normalized_request.type === "sum_of_squares" && Array.isArray(normalized_request.numbers)) {
+        normalized_request.numbers = normalized_request.numbers.join(", ");
+    }
+
+    return normalized_request;
+}
+
+function read_requests() {
+    const requests = file_service.read_data(data_file_path).map(normalize_request);
+    file_service.write_data(data_file_path, requests);
+    return requests;
+}
+
 function init(file_path) {
     data_file_path = file_path;
+    read_requests();
 }
 
 function find_all(filters) {
-    let requests = file_service.read_data(data_file_path);
+    let requests = read_requests();
 
     if (filters.title) {
         requests = requests.filter((request) =>
@@ -31,12 +54,12 @@ function find_all(filters) {
 }
 
 function find_one(id) {
-    const requests = file_service.read_data(data_file_path);
+    const requests = read_requests();
     return requests.find((request) => request.id === id);
 }
 
 function create(request_data) {
-    const requests = file_service.read_data(data_file_path);
+    const requests = read_requests();
 
     const new_id =
         requests.length > 0
@@ -45,7 +68,7 @@ function create(request_data) {
 
     const new_request = {
         id: new_id,
-        ...request_data
+        ...normalize_request(request_data)
     };
 
     requests.push(new_request);
@@ -55,24 +78,24 @@ function create(request_data) {
 }
 
 function update(id, request_data) {
-    const requests = file_service.read_data(data_file_path);
+    const requests = read_requests();
     const index = requests.findIndex((request) => request.id === id);
 
     if (index === -1) {
         return null;
     }
 
-    requests[index] = {
+    requests[index] = normalize_request({
         ...requests[index],
         ...request_data
-    };
+    });
 
     file_service.write_data(data_file_path, requests);
     return requests[index];
 }
 
 function remove(id) {
-    const requests = file_service.read_data(data_file_path);
+    const requests = read_requests();
     const filtered_requests = requests.filter((request) => request.id !== id);
 
     if (filtered_requests.length === requests.length) {

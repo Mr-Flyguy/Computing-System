@@ -1,5 +1,19 @@
 const requests_service = require("../services/requestsService");
 
+function validate_request_payload(payload, is_partial = false) {
+    const { title, description, type, status, numbers } = payload;
+
+    if (!is_partial && (!title || !description || !type || !status)) {
+        return "Не все обязательные поля заполнены";
+    }
+
+    if (type === "sum_of_squares" && numbers !== undefined && typeof numbers !== "string") {
+        return "Для sum_of_squares поле numbers должно быть строкой с числами через запятую";
+    }
+
+    return null;
+}
+
 function get_all_requests(req, res) {
     const { title, status, type } = req.query;
     const requests = requests_service.find_all({ title, status, type });
@@ -18,10 +32,10 @@ function get_request_by_id(req, res) {
 }
 
 function create_request(req, res) {
-    const { title, description, type, status } = req.body;
+    const validation_error = validate_request_payload(req.body);
 
-    if (!title || !description || !type || !status) {
-        return res.status(400).json({ error: "Не все обязательные поля заполнены" });
+    if (validation_error) {
+        return res.status(400).json({ error: validation_error });
     }
 
     const new_request = requests_service.create(req.body);
@@ -30,6 +44,12 @@ function create_request(req, res) {
 
 function update_request(req, res) {
     const id = parseInt(req.params.id);
+    const validation_error = validate_request_payload(req.body, true);
+
+    if (validation_error) {
+        return res.status(400).json({ error: validation_error });
+    }
+
     const updated_request = requests_service.update(id, req.body);
 
     if (!updated_request) {
