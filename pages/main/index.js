@@ -34,16 +34,23 @@ export class MainPage {
     }
 
     getHTML() {
+        const services = get_services();
         const filtered_services = this.get_filtered_services();
 
         return `
             <div id="main-page" class="app-container">
                 <div class="hero-block">
-                    <div>
-                        <h1 class="hero-title">Услуги вычислений</h1>
-                        <p class="hero-text">
-                            Поиск по названию услуги работает локально на этой странице.
-                        </p>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div>
+                            <h1 class="hero-title">Услуги вычислений</h1>
+                            <p class="hero-text">
+                                Каталог вычислительных услуг: факториал, НОД и сумма квадратов
+                            </p>
+                        </div>
+
+                        <div class="request-counter">
+                            ${services.length} услуги
+                        </div>
                     </div>
 
                     <div class="service-search-block">
