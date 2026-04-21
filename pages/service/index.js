@@ -1,25 +1,25 @@
-import { RequestComponent } from "../../components/request/index.js";
-import { RequestModelComponent } from "../../components/request-model/index.js";
+import { ServiceDetailsComponent } from "../../components/service-details/index.js";
+import { ServiceModelComponent } from "../../components/service-model/index.js";
 import { BackButtonComponent } from "../../components/back-button/index.js";
 import { MainPage } from "../main/index.js";
-import { requests_form_html } from "../main/request-form.js";
+import { service_request_form_html } from "../main/service-request-form.js";
 import { get_service_by_id } from "../../utils/service-storage.js";
-import { add_request, get_next_id, get_requests_by_calculation_type } from "../../utils/request-storage.js";
+import { add_request, get_next_id, get_requests_by_calculation_type } from "../../utils/service-request-storage.js";
 import { factorial, gcd, solveExpression, sumOfSquares } from "../../utils/calculations.js";
 
-export class RequestPage {
+export class ServicePage {
     constructor(parent, id) {
         this.parent = parent;
         this.id = Number(id);
     }
 
     get page_root() {
-        return document.getElementById("request-page");
+        return document.getElementById("service-page");
     }
 
     getHTML() {
         return `
-            <div id="request-page" class="app-container"></div>
+            <div id="service-page" class="app-container"></div>
         `;
     }
 
@@ -60,26 +60,26 @@ export class RequestPage {
     get_form_data(calculation_type) {
         if (calculation_type === "factorial") {
             return {
-                n: Number(document.getElementById("request-n").value)
+                n: Number(document.getElementById("service-n").value)
             };
         }
 
         if (calculation_type === "gcd") {
             return {
-                a: Number(document.getElementById("request-a").value),
-                b: Number(document.getElementById("request-b").value)
+                a: Number(document.getElementById("service-a").value),
+                b: Number(document.getElementById("service-b").value)
             };
         }
 
         if (calculation_type === "solve_expression") {
             return {
-                expression: document.getElementById("request-expression").value,
-                x: Number(document.getElementById("request-x").value)
+                expression: document.getElementById("service-expression").value,
+                x: Number(document.getElementById("service-x").value)
             };
         }
 
         return {
-            numbers: document.getElementById("request-numbers").value
+            numbers: document.getElementById("service-numbers").value
         };
     }
 
@@ -114,7 +114,7 @@ export class RequestPage {
             this.page_root.insertAdjacentHTML(
                 "beforeend",
                 `
-                    <div class="request-page-card">
+                    <div class="service-page-card">
                         <h2 class="mb-2">Услуга не найдена</h2>
                         <p class="text-muted mb-0">Выберите услугу из каталога на главной странице.</p>
                     </div>
@@ -123,19 +123,19 @@ export class RequestPage {
             return;
         }
 
-        const request_component = new RequestComponent(this.page_root);
-        request_component.render(
+        const service_details_component = new ServiceDetailsComponent(this.page_root);
+        service_details_component.render(
             page_data.service,
             page_data.requests,
-            requests_form_html(page_data.service)
+            service_request_form_html(page_data.service)
         );
 
         document
-            .getElementById("request-form")
+            .getElementById("service-request-form")
             .addEventListener("submit", this.submit_form.bind(this));
 
-        const model_root = document.getElementById("request-model-root");
-        const request_model = new RequestModelComponent(model_root);
-        request_model.render();
+        const model_root = document.getElementById("service-model-root");
+        const service_model = new ServiceModelComponent(model_root);
+        service_model.render();
     }
 }
