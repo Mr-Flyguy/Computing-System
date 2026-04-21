@@ -8,7 +8,34 @@ export function sumOfSquares(arr) {
     return sum;
 }
 
-export function solve(expression, x) {
+export function factorial(n) {
+    if (n < 0) {
+        return null;
+    }
+
+    let result = 1;
+
+    for (let i = 2; i <= n; i++) {
+        result *= i;
+    }
+
+    return result;
+}
+
+export function gcd(a, b) {
+    let left = Math.abs(a);
+    let right = Math.abs(b);
+
+    while (right !== 0) {
+        const remainder = left % right;
+        left = right;
+        right = remainder;
+    }
+
+    return left;
+}
+
+export function solveExpression(expression, x) {
     const str = expression.replace(/x/g, x);
     let i = 0;
 
@@ -18,7 +45,7 @@ export function solve(expression, x) {
         let sign = 1;
 
         while (i < str.length) {
-            let char = str[i];
+            const char = str[i];
 
             if (char >= "0" && char <= "9") {
                 current = 0;
