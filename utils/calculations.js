@@ -1,4 +1,22 @@
-export function sumOfSquares(arr) {
+export function parseNumbers(numbers_value) {
+    if (Array.isArray(numbers_value)) {
+        return numbers_value
+            .map((item) => Number(item))
+            .filter((item) => !Number.isNaN(item));
+    }
+
+    if (typeof numbers_value !== "string") {
+        return [];
+    }
+
+    return numbers_value
+        .split(",")
+        .map((item) => Number(item.trim()))
+        .filter((item) => !Number.isNaN(item));
+}
+
+export function sumOfSquares(numbers_value) {
+    const arr = parseNumbers(numbers_value);
     let sum = 0;
 
     for (let i = 0; i < arr.length; i++) {

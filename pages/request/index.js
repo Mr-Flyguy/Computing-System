@@ -79,12 +79,7 @@ export class RequestPage {
         }
 
         return {
-            numbers: document
-                .getElementById("request-numbers")
-                .value
-                .split(",")
-                .map((item) => Number(item.trim()))
-                .filter((item) => !Number.isNaN(item))
+            numbers: document.getElementById("request-numbers").value
         };
     }
 
