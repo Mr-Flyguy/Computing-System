@@ -1,5 +1,5 @@
 {
-  "name": "math-services-api",
+  "name": "math-requests-api",
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
