@@ -1,6 +1,6 @@
 import { parseNumbers } from "../../utils/calculations.js";
 
-export class RequestComponent {
+export class ServiceDetailsComponent {
     constructor(parent) {
         this.parent = parent;
     }
@@ -125,7 +125,7 @@ export class RequestComponent {
 
     getHTML(service_data, requests, form_html) {
         return `
-            <div class="request-page-card">
+            <div class="service-page-card">
                 <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
                     <div>
                         <h2 class="mb-2">${service_data.title}</h2>
@@ -138,22 +138,22 @@ export class RequestComponent {
                     <div class="request-image-block">
                         <img class="request-image" src="${service_data.image}" alt="Изображение услуги">
                     </div>
-                    <div id="request-model-root"></div>
+                    <div id="service-model-root"></div>
                 </div>
 
-                <div class="accordion" id="request-accordion">
+                <div class="accordion" id="service-accordion">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button
                                 class="accordion-button"
                                 type="button"
                                 data-bs-toggle="collapse"
-                                data-bs-target="#request-info"
+                                data-bs-target="#service-info"
                             >
                                 Информация
                             </button>
                         </h2>
-                        <div id="request-info" class="accordion-collapse collapse show">
+                        <div id="service-info" class="accordion-collapse collapse show">
                             <div class="accordion-body">
                                 <p><b>Описание:</b> ${service_data.description}</p>
                                 <p><b>Тип вычисления:</b> ${this.get_type_label(service_data.calculation_type)}</p>
