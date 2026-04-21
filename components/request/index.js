@@ -1,3 +1,5 @@
+import { parseNumbers } from "../../utils/calculations.js";
+
 export class RequestComponent {
     constructor(parent) {
         this.parent = parent;
@@ -33,7 +35,7 @@ export class RequestComponent {
         }
 
         if (request_data.calculation_type === "sum_of_squares") {
-            return `Массив: [${request_data.numbers.join(", ")}]`;
+            return `Массив: [${parseNumbers(request_data.numbers).join(", ")}]`;
         }
 
         return "";
@@ -73,7 +75,7 @@ export class RequestComponent {
         if (request_data.calculation_type === "sum_of_squares") {
             return `
                 <ol class="mb-0">
-                    <li>Берём массив: [${request_data.numbers.join(", ")}]</li>
+                    <li>Берём массив: [${parseNumbers(request_data.numbers).join(", ")}]</li>
                     <li>Возводим каждый элемент в квадрат</li>
                     <li>Складываем квадраты и получаем: ${request_data.result}</li>
                 </ol>

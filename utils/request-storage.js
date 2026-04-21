@@ -2,6 +2,22 @@ import { initial_requests } from "../data/requests.js";
 
 const storage_key = "math_service_requests";
 
+function normalize_request(request) {
+    if (!request) {
+        return request;
+    }
+
+    const normalized_request = {
+        ...request
+    };
+
+    if (normalized_request.calculation_type === "sum_of_squares" && Array.isArray(normalized_request.numbers)) {
+        normalized_request.numbers = normalized_request.numbers.join(", ");
+    }
+
+    return normalized_request;
+}
+
 function is_valid_request(request) {
     return Boolean(request)
         && typeof request.id === "number"
@@ -14,9 +30,10 @@ export function get_requests() {
     const saved_requests = localStorage.getItem(storage_key);
 
     if (saved_requests) {
-        const parsed_requests = JSON.parse(saved_requests);
+        const parsed_requests = JSON.parse(saved_requests).map(normalize_request);
 
         if (Array.isArray(parsed_requests) && parsed_requests.every(is_valid_request)) {
+            save_requests(parsed_requests);
             return parsed_requests;
         }
     }
@@ -31,7 +48,7 @@ export function save_requests(requests) {
 
 export function add_request(request) {
     const requests = get_requests();
-    requests.push(request);
+    requests.push(normalize_request(request));
     save_requests(requests);
 }
 
