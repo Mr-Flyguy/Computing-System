@@ -67,7 +67,7 @@ export class ServiceDetailsComponent {
         if (requests.length === 0) {
             return `
                 <div class="request-history-empty">
-                    По этой услуге пока нет заявок в API.
+                    По этой услуге пока нет сохранённых вычислений.
                 </div>
             `;
         }
@@ -76,7 +76,7 @@ export class ServiceDetailsComponent {
             .map((request_data) => `
                 <div class="request-extra-item">
                     <div>
-                        <div class="request-extra-key">Заявка #${request_data.id}</div>
+                        <div class="request-extra-key">Вычисление #${request_data.id}</div>
                         <div class="request-extra-value request-extra-value-left">
                             ${request_data.title}
                         </div>
@@ -126,16 +126,16 @@ export class ServiceDetailsComponent {
                         <div class="request-detail-value">${this.get_type_label(service_data.calculation_type)}</div>
                     </div>
                     <div class="request-detail-item">
-                        <div class="request-detail-label">Назначение</div>
+                        <div class="request-detail-label">Описание</div>
                         <div class="request-detail-value request-detail-value-text">
-                            Создание заявок и работа с API
+                            Введите данные и получите готовый результат вычисления.
                         </div>
                     </div>
                 </div>
 
                 <div class="request-history-block">
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-                        <h3 class="mb-0">Заявки по услуге</h3>
+                        <h3 class="mb-0">История вычислений</h3>
                         <div id="request-create-button"></div>
                     </div>
                     <div class="request-extra-grid">
