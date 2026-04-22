@@ -12,6 +12,7 @@ export class ServicePage {
     constructor(parent, id) {
         this.parent = parent;
         this.id = Number(id);
+        this.search_query = "";
     }
 
     get page_root() {
@@ -54,9 +55,15 @@ export class ServicePage {
         request_form_page.render();
     }
 
+    handle_search(event) {
+        event.preventDefault();
+        this.search_query = document.getElementById("request-search-input").value.trim();
+        this.render();
+    }
+
     render_data(service_data, requests) {
         const service_details_component = new ServiceDetailsComponent(this.page_root);
-        service_details_component.render(service_data, requests);
+        service_details_component.render(service_data, requests, this.search_query);
 
         const create_button = new ButtonComponent(document.getElementById("request-create-button"));
         create_button.render(
@@ -72,12 +79,16 @@ export class ServicePage {
                 .addEventListener("click", this.click_edit_request.bind(this));
         });
 
+        document
+            .getElementById("request-search-form")
+            .addEventListener("submit", this.handle_search.bind(this));
+
         const model_root = document.getElementById("service-model-root");
         const service_model = new ServiceModelComponent(model_root);
         service_model.render();
     }
 
-    get_data() {
+    async get_data() {
         const service = get_service_by_id(this.id);
 
         if (!service) {
@@ -93,24 +104,29 @@ export class ServicePage {
             return;
         }
 
-        ajax.get(requestUrls.getRequests({ type: this.request_type }), (data, status) => {
-            if (status === 200) {
-                this.render_data(service, data);
-                return;
-            }
+        const { data, status } = await ajax.get(
+            requestUrls.getRequests({
+                type: this.request_type,
+                title: this.search_query
+            })
+        );
 
-            this.page_root.insertAdjacentHTML(
-                "beforeend",
-                `
-                    <div class="service-page-card">
-                        <h2 class="mb-2">Не удалось загрузить данные</h2>
-                        <p class="text-muted mb-0">
-                            Попробуйте обновить страницу ещё раз.
-                        </p>
-                    </div>
-                `
-            );
-        });
+        if (status === 200) {
+            this.render_data(service, data);
+            return;
+        }
+
+        this.page_root.insertAdjacentHTML(
+            "beforeend",
+            `
+                <div class="service-page-card">
+                    <h2 class="mb-2">Не удалось загрузить данные</h2>
+                    <p class="text-muted mb-0">
+                        Попробуйте обновить страницу ещё раз.
+                    </p>
+                </div>
+            `
+        );
     }
 
     render() {

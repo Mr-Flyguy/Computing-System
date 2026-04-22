@@ -63,11 +63,13 @@ export class ServiceDetailsComponent {
         return `Результат: ${request_data.result}`;
     }
 
-    get_requests_html(requests) {
+    get_requests_html(requests, search_query) {
         if (requests.length === 0) {
             return `
                 <div class="request-history-empty">
-                    По этой услуге пока нет сохранённых вычислений.
+                    ${search_query
+        ? "По вашему запросу вычисления не найдены."
+        : "По этой услуге пока нет сохранённых вычислений."}
                 </div>
             `;
         }
@@ -102,7 +104,7 @@ export class ServiceDetailsComponent {
             .join("");
     }
 
-    getHTML(service_data, requests) {
+    getHTML(service_data, requests, search_query) {
         return `
             <div class="service-page-card">
                 <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
@@ -138,16 +140,31 @@ export class ServiceDetailsComponent {
                         <h3 class="mb-0">История вычислений</h3>
                         <div id="request-create-button"></div>
                     </div>
+                    <form id="request-search-form" class="service-search-block service-search-inline-block">
+                        <label class="service-search-label" for="request-search-input">Поиск по названию вычисления</label>
+                        <div class="request-search-row">
+                            <input
+                                id="request-search-input"
+                                class="form-control service-search-input"
+                                type="text"
+                                placeholder="Например, факториал или сумма квадратов"
+                                value="${search_query}"
+                            >
+                            <button type="submit" class="btn btn-outline-secondary pm-btn-outline">
+                                Найти
+                            </button>
+                        </div>
+                    </form>
                     <div class="request-extra-grid">
-                        ${this.get_requests_html(requests)}
+                        ${this.get_requests_html(requests, search_query)}
                     </div>
                 </div>
             </div>
         `;
     }
 
-    render(service_data, requests) {
-        const html = this.getHTML(service_data, requests);
+    render(service_data, requests, search_query) {
+        const html = this.getHTML(service_data, requests, search_query);
         this.parent.insertAdjacentHTML("beforeend", html);
     }
 }

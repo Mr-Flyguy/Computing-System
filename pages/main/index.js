@@ -1,6 +1,11 @@
 import { ServiceCardComponent } from "../../components/service-card/index.js";
+import { ButtonComponent } from "../../components/button/index.js";
 import { ServicePage } from "../service/index.js";
-import { get_services } from "../../utils/service-storage.js";
+import {
+    create_service_copy_from_first,
+    get_services,
+    remove_service_by_id
+} from "../../utils/service-storage.js";
 
 export class MainPage {
     constructor(parent) {
@@ -22,6 +27,10 @@ export class MainPage {
 
     get counter_root() {
         return document.getElementById("service-counter");
+    }
+
+    get add_service_button_root() {
+        return document.getElementById("add-service-button");
     }
 
     get_filtered_services() {
@@ -67,6 +76,10 @@ export class MainPage {
                             value="${this.search_query}"
                         >
                     </div>
+
+                    <div class="mt-3">
+                        <div id="add-service-button" class="d-inline-flex"></div>
+                    </div>
                 </div>
 
                 <div id="request-list" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4"></div>
@@ -91,6 +104,17 @@ export class MainPage {
         this.update_service_list();
     }
 
+    add_service() {
+        create_service_copy_from_first();
+        this.update_service_list();
+    }
+
+    delete_service(event) {
+        const service_id = Number(event.target.dataset.id);
+        remove_service_by_id(service_id);
+        this.update_service_list();
+    }
+
     update_service_list() {
         const services = get_services();
         const filtered_services = this.get_filtered_services();
@@ -98,7 +122,11 @@ export class MainPage {
 
         filtered_services.forEach((service_data) => {
             const service_card = new ServiceCardComponent(this.request_list_root);
-            service_card.render(service_data, this.click_card.bind(this));
+            service_card.render(
+                service_data,
+                this.click_card.bind(this),
+                this.delete_service.bind(this)
+            );
         });
 
         this.counter_root.textContent = `${services.length} услуги`;
@@ -109,6 +137,15 @@ export class MainPage {
         this.parent.innerHTML = "";
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
         this.search_input.addEventListener("input", this.handle_search.bind(this));
+
+        const add_service_button = new ButtonComponent(this.add_service_button_root);
+        add_service_button.render(
+            "Добавить услугу",
+            "add-service-action",
+            this.add_service.bind(this),
+            "btn btn-danger pm-btn"
+        );
+
         this.update_service_list();
     }
 }
