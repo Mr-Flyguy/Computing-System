@@ -146,17 +146,17 @@ export class RequestFormPage {
             <div class="service-page-card">
                 <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
                     <div>
-                        <h2 class="mb-2">${this.is_edit_mode ? "Редактирование заявки" : "Создание заявки"}</h2>
+                        <h2 class="mb-2">${this.is_edit_mode ? "Редактирование вычисления" : "Новое вычисление"}</h2>
                         <p class="text-muted mb-0">
                             Услуга: ${this.service ? this.service.title : "не найдена"}
                         </p>
                         <p class="text-muted mb-0">
                             ${this.is_edit_mode
-        ? "Измените входные данные, и заявка будет пересчитана через PATCH запрос."
-        : "Введите входные данные, и заявка будет вычислена через POST запрос."}
+        ? "Измените входные данные и сохраните обновлённый результат."
+        : "Введите исходные данные для выполнения вычисления."}
                         </p>
                     </div>
-                    <span class="request-status">${this.is_edit_mode ? "PATCH" : "POST"}</span>
+                    <span class="request-status">${this.is_edit_mode ? "Изменение" : "Новое"}</span>
                 </div>
 
                 <div id="request-form-error" class="request-error d-none"></div>
@@ -190,7 +190,7 @@ export class RequestFormPage {
 
                         <div class="col-12">
                             <button type="submit" class="btn btn-danger pm-btn">
-                                ${this.is_edit_mode ? "Сохранить изменения" : "Создать заявку"}
+                                ${this.is_edit_mode ? "Сохранить изменения" : "Выполнить вычисление"}
                             </button>
                         </div>
                     </div>
@@ -313,7 +313,7 @@ export class RequestFormPage {
                     return;
                 }
 
-                this.show_error("Не удалось обновить заявку. Проверьте подключение.");
+                this.show_error("Не удалось сохранить изменения.");
             });
 
             return;
@@ -325,7 +325,7 @@ export class RequestFormPage {
                 return;
             }
 
-            this.show_error("Не удалось создать заявку. Проверьте подключение.");
+            this.show_error("Не удалось сохранить вычисление.");
         });
     }
 
@@ -364,7 +364,7 @@ export class RequestFormPage {
                     "beforeend",
                     `
                         <div class="request-error">
-                            Не удалось загрузить заявку для редактирования.
+                            Не удалось загрузить данные для редактирования.
                         </div>
                     `
                 );
