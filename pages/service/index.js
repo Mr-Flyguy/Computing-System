@@ -60,7 +60,7 @@ export class ServicePage {
 
         const create_button = new ButtonComponent(document.getElementById("request-create-button"));
         create_button.render(
-            "Добавить заявку",
+            "Новое вычисление",
             "request-create-action",
             this.click_create.bind(this),
             "btn btn-danger pm-btn"
@@ -103,9 +103,9 @@ export class ServicePage {
                 "beforeend",
                 `
                     <div class="service-page-card">
-                        <h2 class="mb-2">Не удалось загрузить заявки</h2>
+                        <h2 class="mb-2">Не удалось загрузить данные</h2>
                         <p class="text-muted mb-0">
-                            Проверьте backend API и настройки CORS Unblock.
+                            Попробуйте обновить страницу ещё раз.
                         </p>
                     </div>
                 `
