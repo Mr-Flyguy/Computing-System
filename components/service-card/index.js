@@ -40,6 +40,7 @@ export class ServiceCardComponent {
                         <p class="request-text">${service_data.description}</p>
 
                         <div class="mt-auto">
+                            <div id="request-delete-button-${service_data.id}" class="w-100 mb-2"></div>
                             <div id="request-open-button-${service_data.id}" class="w-100"></div>
                         </div>
                     </div>
@@ -48,11 +49,20 @@ export class ServiceCardComponent {
         `;
     }
 
-    render(service_data, open_listener) {
+    render(service_data, open_listener, delete_listener) {
         const html = this.getHTML(service_data);
         this.parent.insertAdjacentHTML("beforeend", html);
 
+        const delete_button_root = document.getElementById(`request-delete-button-${service_data.id}`);
         const open_button_root = document.getElementById(`request-open-button-${service_data.id}`);
+
+        const delete_button = new ButtonComponent(delete_button_root);
+        delete_button.render(
+            "Удалить услугу",
+            `request-delete-${service_data.id}`,
+            delete_listener,
+            "btn btn-outline-danger pm-btn-outline-danger w-100"
+        );
 
         const open_button = new ButtonComponent(open_button_root);
         open_button.render(
@@ -62,6 +72,7 @@ export class ServiceCardComponent {
             "btn btn-danger pm-btn w-100"
         );
 
+        document.getElementById(`request-delete-${service_data.id}`).dataset.id = service_data.id;
         document.getElementById(`request-open-${service_data.id}`).dataset.id = service_data.id;
     }
 }

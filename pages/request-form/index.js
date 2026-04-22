@@ -299,7 +299,7 @@ export class RequestFormPage {
         return null;
     }
 
-    submit_form(event) {
+    async submit_form(event) {
         event.preventDefault();
         this.hide_error();
 
@@ -307,26 +307,29 @@ export class RequestFormPage {
         request_data.result = this.get_result(request_data);
 
         if (this.is_edit_mode) {
-            ajax.patch(requestUrls.updateRequestById(this.request_id), request_data, (_, status) => {
-                if (status === 200) {
-                    this.click_back();
-                    return;
-                }
+            const { status } = await ajax.patch(
+                requestUrls.updateRequestById(this.request_id),
+                request_data
+            );
 
-                this.show_error("Не удалось сохранить изменения.");
-            });
-
-            return;
-        }
-
-        ajax.post(requestUrls.createRequest(), request_data, (_, status) => {
-            if (status === 201) {
+            if (status === 200) {
                 this.click_back();
                 return;
             }
 
-            this.show_error("Не удалось сохранить вычисление.");
-        });
+            this.show_error("Не удалось сохранить изменения.");
+
+            return;
+        }
+
+        const { status } = await ajax.post(requestUrls.createRequest(), request_data);
+
+        if (status === 201) {
+            this.click_back();
+            return;
+        }
+
+        this.show_error("Не удалось сохранить вычисление.");
     }
 
     render_form(request_data) {
@@ -334,7 +337,7 @@ export class RequestFormPage {
         this.bind_form_events();
     }
 
-    render() {
+    async render() {
         this.parent.innerHTML = "";
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
 
@@ -354,21 +357,23 @@ export class RequestFormPage {
         }
 
         if (this.is_edit_mode) {
-            ajax.get(requestUrls.getRequestById(this.request_id), (data, status) => {
-                if (status === 200) {
-                    this.render_form(data);
-                    return;
-                }
+            const { data, status } = await ajax.get(
+                requestUrls.getRequestById(this.request_id)
+            );
 
-                this.page_root.insertAdjacentHTML(
-                    "beforeend",
-                    `
-                        <div class="request-error">
-                            Не удалось загрузить данные для редактирования.
-                        </div>
-                    `
-                );
-            });
+            if (status === 200) {
+                this.render_form(data);
+                return;
+            }
+
+            this.page_root.insertAdjacentHTML(
+                "beforeend",
+                `
+                    <div class="request-error">
+                        Не удалось загрузить данные для редактирования.
+                    </div>
+                `
+            );
 
             return;
         }
