@@ -1,5 +1,3 @@
-import { parseNumbers } from "../../utils/calculations.js";
-
 export class ServiceDetailsComponent {
     constructor(parent) {
         this.parent = parent;
@@ -21,109 +19,90 @@ export class ServiceDetailsComponent {
         return "Сумма квадратов";
     }
 
-    get_input_html(request_data) {
-        if (request_data.calculation_type === "factorial") {
-            return `n = ${request_data.n}`;
+    get_status_label(status) {
+        if (status === "new") {
+            return "Новая";
         }
 
-        if (request_data.calculation_type === "gcd") {
-            return `a = ${request_data.a}, b = ${request_data.b}`;
+        if (status === "in_progress") {
+            return "В работе";
         }
 
-        if (request_data.calculation_type === "solve_expression") {
+        if (status === "done") {
+            return "Выполнена";
+        }
+
+        return status || "Без статуса";
+    }
+
+    get_request_payload_html(request_data) {
+        if (request_data.type === "sum_of_squares" && request_data.numbers) {
+            return `Числа: ${request_data.numbers}`;
+        }
+
+        if ((request_data.type === "solve" || request_data.type === "solve_expression") && request_data.expression) {
             return `Выражение: ${request_data.expression}, x = ${request_data.x}`;
         }
 
-        if (request_data.calculation_type === "sum_of_squares") {
-            return `Массив: [${parseNumbers(request_data.numbers).join(", ")}]`;
+        if (request_data.type === "factorial") {
+            return `n = ${request_data.n}`;
         }
 
-        return "";
+        if (request_data.type === "gcd") {
+            return `a = ${request_data.a}, b = ${request_data.b}`;
+        }
+
+        return "Дополнительные данные не указаны";
     }
 
-    get_steps_html(request_data) {
-        if (request_data.calculation_type === "factorial") {
-            return `
-                <ol class="mb-0">
-                    <li>Берём число n = ${request_data.n}</li>
-                    <li>Последовательно перемножаем числа от 1 до ${request_data.n}</li>
-                    <li>Получаем результат: ${request_data.result}</li>
-                </ol>
-            `;
+    get_request_result_html(request_data) {
+        if (request_data.result === undefined || request_data.result === null || request_data.result === "") {
+            return "Результат не вычислен";
         }
 
-        if (request_data.calculation_type === "gcd") {
-            return `
-                <ol class="mb-0">
-                    <li>Берём числа ${request_data.a} и ${request_data.b}</li>
-                    <li>Применяем алгоритм Евклида для поиска общего делителя</li>
-                    <li>Вычисляем результат: ${request_data.result}</li>
-                </ol>
-            `;
-        }
-
-        if (request_data.calculation_type === "solve_expression") {
-            return `
-                <ol class="mb-0">
-                    <li>Берём выражение ${request_data.expression}</li>
-                    <li>Подставляем x = ${request_data.x}</li>
-                    <li>Получаем результат: ${request_data.result}</li>
-                </ol>
-            `;
-        }
-
-        if (request_data.calculation_type === "sum_of_squares") {
-            return `
-                <ol class="mb-0">
-                    <li>Берём массив: [${parseNumbers(request_data.numbers).join(", ")}]</li>
-                    <li>Возводим каждый элемент в квадрат</li>
-                    <li>Складываем квадраты и получаем: ${request_data.result}</li>
-                </ol>
-            `;
-        }
-
-        return "";
+        return `Результат: ${request_data.result}`;
     }
 
-    get_request_history_html(requests) {
+    get_requests_html(requests) {
         if (requests.length === 0) {
             return `
                 <div class="request-history-empty">
-                    Пока нет созданных заявок по этой услуге.
+                    По этой услуге пока нет заявок в API.
                 </div>
             `;
         }
 
         return requests
-            .map((request_data, index) => `
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button
-                            class="accordion-button ${index === 0 ? "" : "collapsed"}"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#request-item-${request_data.id}"
-                        >
-                            Заявка #${request_data.id}: ${this.get_input_html(request_data)}
-                        </button>
-                    </h2>
-                    <div
-                        id="request-item-${request_data.id}"
-                        class="accordion-collapse collapse ${index === 0 ? "show" : ""}"
-                    >
-                        <div class="accordion-body">
-                            <p><b>Статус:</b> ${request_data.status}</p>
-                            <p><b>Входные данные:</b> ${this.get_input_html(request_data)}</p>
-                            <p><b>Результат:</b> ${request_data.result}</p>
-                            <div>${this.get_steps_html(request_data)}</div>
+            .map((request_data) => `
+                <div class="request-extra-item">
+                    <div>
+                        <div class="request-extra-key">Заявка #${request_data.id}</div>
+                        <div class="request-extra-value request-extra-value-left">
+                            ${request_data.title}
                         </div>
+                        <div class="request-extra-muted">
+                            ${this.get_request_payload_html(request_data)}
+                        </div>
+                        <div class="request-extra-result">
+                            ${this.get_request_result_html(request_data)}
+                        </div>
+                    </div>
+                    <div class="request-extra-actions">
+                        <span class="request-status">${this.get_status_label(request_data.status)}</span>
+                        <button
+                            class="btn btn-outline-secondary pm-btn-outline"
+                            id="request-edit-${request_data.id}"
+                            data-id="${request_data.id}"
+                        >
+                            Редактировать
+                        </button>
                     </div>
                 </div>
             `)
             .join("");
     }
 
-    getHTML(service_data, requests, form_html) {
+    getHTML(service_data, requests) {
         return `
             <div class="service-page-card">
                 <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
@@ -141,45 +120,34 @@ export class ServiceDetailsComponent {
                     <div id="service-model-root"></div>
                 </div>
 
-                <div class="accordion" id="service-accordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button
-                                class="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#service-info"
-                            >
-                                Информация
-                            </button>
-                        </h2>
-                        <div id="service-info" class="accordion-collapse collapse show">
-                            <div class="accordion-body">
-                                <p><b>Описание:</b> ${service_data.description}</p>
-                                <p><b>Тип вычисления:</b> ${this.get_type_label(service_data.calculation_type)}</p>
-                                <p><b>Назначение:</b> Создание заявок с входными данными и автоматическим расчётом результата.</p>
-                            </div>
+                <div class="request-detail-grid">
+                    <div class="request-detail-item">
+                        <div class="request-detail-label">Тип</div>
+                        <div class="request-detail-value">${this.get_type_label(service_data.calculation_type)}</div>
+                    </div>
+                    <div class="request-detail-item">
+                        <div class="request-detail-label">Назначение</div>
+                        <div class="request-detail-value request-detail-value-text">
+                            Создание заявок и работа с API
                         </div>
                     </div>
                 </div>
 
-                ${form_html}
-
                 <div class="request-history-block">
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-                        <h3 class="mb-0">Созданные заявки</h3>
-                        <span class="request-info">${requests.length} шт.</span>
+                        <h3 class="mb-0">Заявки по услуге</h3>
+                        <div id="request-create-button"></div>
                     </div>
-                    <div class="accordion" id="request-history-accordion">
-                        ${this.get_request_history_html(requests)}
+                    <div class="request-extra-grid">
+                        ${this.get_requests_html(requests)}
                     </div>
                 </div>
             </div>
         `;
     }
 
-    render(service_data, requests, form_html) {
-        const html = this.getHTML(service_data, requests, form_html);
+    render(service_data, requests) {
+        const html = this.getHTML(service_data, requests);
         this.parent.insertAdjacentHTML("beforeend", html);
     }
 }
