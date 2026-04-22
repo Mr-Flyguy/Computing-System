@@ -35,6 +35,11 @@ body {
     margin-top: 24px;
 }
 
+.service-search-inline-block {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
 .service-search-label {
     display: block;
     margin-bottom: 10px;
@@ -51,6 +56,12 @@ body {
 .service-search-input:focus {
     border-color: #d82d3e;
     box-shadow: 0 0 0 0.2rem rgba(216, 45, 62, 0.15);
+}
+
+.request-search-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
 }
 
 .request-counter {
@@ -312,6 +323,11 @@ body {
 @media (max-width: 768px) {
     .request-media {
         grid-template-columns: 1fr;
+    }
+
+    .request-search-row {
+        flex-direction: column;
+        align-items: stretch;
     }
 
     .request-extra-item {
