@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
+const calculator_model_url = new URL("../../models/calculator.glb", import.meta.url).href;
+
 export class ServiceModelComponent {
     constructor(parent) {
         this.parent = parent;
@@ -50,7 +52,7 @@ export class ServiceModelComponent {
         const loader = new GLTFLoader();
 
         loader.load(
-            "./models/calculator.glb",
+            calculator_model_url,
             (gltf) => {
                 const model = gltf.scene;
 
