@@ -1,6 +1,22 @@
 class RequestUrls {
     constructor() {
-        this.baseUrl = "";
+        this.baseUrl = this.getBaseUrl();
+    }
+
+    getBaseUrl() {
+        if (typeof window === "undefined" || !window.location) {
+            return "";
+        }
+
+        if (window.location.port === "3000") {
+            return "";
+        }
+
+        if (window.location.protocol === "file:") {
+            return "http://localhost:3000";
+        }
+
+        return `${window.location.protocol}//${window.location.hostname}:3000`;
     }
 
     getRequests(filters = {}) {
