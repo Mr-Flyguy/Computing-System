@@ -3,7 +3,6 @@ import { ServicePage } from "../service/index.js";
 import { ajax } from "../../modules/ajax.js";
 import { requestUrls } from "../../modules/requestUrls.js";
 import { get_service_by_id } from "../../utils/service-storage.js";
-import { factorial, gcd, solveExpression, sumOfSquares } from "../../utils/calculations.js";
 
 export class RequestFormPage {
     constructor(parent, service_id, request_id = null) {
@@ -152,7 +151,7 @@ export class RequestFormPage {
                         </p>
                         <p class="text-muted mb-0">
                             ${this.is_edit_mode
-        ? "Измените входные данные и сохраните обновлённый результат."
+        ? "Поля вычисления доступны для просмотра."
         : "Введите исходные данные для выполнения вычисления."}
                         </p>
                     </div>
@@ -188,11 +187,19 @@ export class RequestFormPage {
                             ${this.get_dynamic_fields_html(request_data)}
                         </div>
 
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-danger pm-btn">
-                                ${this.is_edit_mode ? "Сохранить изменения" : "Выполнить вычисление"}
-                            </button>
-                        </div>
+                        ${this.is_edit_mode
+        ? `
+                            <div class="col-12">
+                                <button
+                                    id="request-delete-button"
+                                    type="button"
+                                    class="btn btn-outline-danger pm-btn-outline-danger"
+                                >
+                                    Удалить заявку
+                                </button>
+                            </div>
+                        `
+        : ""}
                     </div>
                 </form>
             </div>
@@ -201,7 +208,15 @@ export class RequestFormPage {
 
     bind_form_events() {
         const form = document.getElementById("request-form");
-        form.addEventListener("submit", this.submit_form.bind(this));
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+        });
+
+        if (this.is_edit_mode) {
+            document
+                .getElementById("request-delete-button")
+                .addEventListener("click", this.click_delete_request.bind(this));
+        }
     }
 
     show_error(message) {
@@ -215,44 +230,15 @@ export class RequestFormPage {
         error_root.classList.remove("d-none");
     }
 
-    hide_error() {
-        const error_root = document.getElementById("request-form-error");
+    click_delete_request() {
+        ajax.delete(requestUrls.removeRequestById(this.request_id), (_, status) => {
+            if (status === 204) {
+                this.click_back();
+                return;
+            }
 
-        if (!error_root) {
-            return;
-        }
-
-        error_root.textContent = "";
-        error_root.classList.add("d-none");
-    }
-
-    collect_form_data() {
-        const data = {
-            title: document.getElementById("request-title").value.trim(),
-            description: document.getElementById("request-description").value.trim(),
-            type: this.request_type,
-            status: "done"
-        };
-
-        if (this.request_type === "sum_of_squares") {
-            data.numbers = document.getElementById("request-numbers").value.trim();
-        }
-
-        if (this.request_type === "solve" || this.request_type === "solve_expression") {
-            data.expression = document.getElementById("request-expression").value.trim();
-            data.x = Number(document.getElementById("request-x").value);
-        }
-
-        if (this.request_type === "factorial") {
-            data.n = Number(document.getElementById("request-n").value);
-        }
-
-        if (this.request_type === "gcd") {
-            data.a = Number(document.getElementById("request-a").value);
-            data.b = Number(document.getElementById("request-b").value);
-        }
-
-        return data;
+            this.show_error("Не удалось удалить заявку.");
+        });
     }
 
     get_default_description() {
@@ -279,65 +265,12 @@ export class RequestFormPage {
         return this.service.description;
     }
 
-    get_result(request_data) {
-        if (this.request_type === "sum_of_squares") {
-            return sumOfSquares(request_data.numbers);
-        }
-
-        if (this.request_type === "solve") {
-            return solveExpression(request_data.expression, request_data.x);
-        }
-
-        if (this.request_type === "factorial") {
-            return factorial(request_data.n);
-        }
-
-        if (this.request_type === "gcd") {
-            return gcd(request_data.a, request_data.b);
-        }
-
-        return null;
-    }
-
-    async submit_form(event) {
-        event.preventDefault();
-        this.hide_error();
-
-        const request_data = this.collect_form_data();
-        request_data.result = this.get_result(request_data);
-
-        if (this.is_edit_mode) {
-            const { status } = await ajax.patch(
-                requestUrls.updateRequestById(this.request_id),
-                request_data
-            );
-
-            if (status === 200) {
-                this.click_back();
-                return;
-            }
-
-            this.show_error("Не удалось сохранить изменения.");
-
-            return;
-        }
-
-        const { status } = await ajax.post(requestUrls.createRequest(), request_data);
-
-        if (status === 201) {
-            this.click_back();
-            return;
-        }
-
-        this.show_error("Не удалось сохранить вычисление.");
-    }
-
     render_form(request_data) {
         this.page_root.insertAdjacentHTML("beforeend", this.get_form_html(request_data));
         this.bind_form_events();
     }
 
-    async render() {
+    render() {
         this.parent.innerHTML = "";
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
 
@@ -357,23 +290,21 @@ export class RequestFormPage {
         }
 
         if (this.is_edit_mode) {
-            const { data, status } = await ajax.get(
-                requestUrls.getRequestById(this.request_id)
-            );
+            ajax.get(requestUrls.getRequestById(this.request_id), (data, status) => {
+                if (status === 200) {
+                    this.render_form(data);
+                    return;
+                }
 
-            if (status === 200) {
-                this.render_form(data);
-                return;
-            }
-
-            this.page_root.insertAdjacentHTML(
-                "beforeend",
-                `
-                    <div class="request-error">
-                        Не удалось загрузить данные для редактирования.
-                    </div>
-                `
-            );
+                this.page_root.insertAdjacentHTML(
+                    "beforeend",
+                    `
+                        <div class="request-error">
+                            Не удалось загрузить заявку для редактирования.
+                        </div>
+                    `
+                );
+            });
 
             return;
         }

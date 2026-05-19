@@ -88,7 +88,7 @@ export class ServicePage {
         service_model.render();
     }
 
-    async get_data() {
+    get_data() {
         const service = get_service_by_id(this.id);
 
         if (!service) {
@@ -104,28 +104,29 @@ export class ServicePage {
             return;
         }
 
-        const { data, status } = await ajax.get(
+        ajax.get(
             requestUrls.getRequests({
                 type: this.request_type,
                 title: this.search_query
-            })
-        );
+            }),
+            (data, status) => {
+                if (status === 200) {
+                    this.render_data(service, data);
+                    return;
+                }
 
-        if (status === 200) {
-            this.render_data(service, data);
-            return;
-        }
-
-        this.page_root.insertAdjacentHTML(
-            "beforeend",
-            `
-                <div class="service-page-card">
-                    <h2 class="mb-2">Не удалось загрузить данные</h2>
-                    <p class="text-muted mb-0">
-                        Попробуйте обновить страницу ещё раз.
-                    </p>
-                </div>
-            `
+                this.page_root.insertAdjacentHTML(
+                    "beforeend",
+                    `
+                        <div class="service-page-card">
+                            <h2 class="mb-2">Не удалось загрузить данные</h2>
+                            <p class="text-muted mb-0">
+                                Запустите сервер и попробуйте ещё раз.
+                            </p>
+                        </div>
+                    `
+                );
+            }
         );
     }
 
