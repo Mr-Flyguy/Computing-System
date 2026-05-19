@@ -19,9 +19,7 @@ function normalize_request(request) {
 }
 
 function read_requests() {
-    const requests = file_service.read_data(data_file_path).map(normalize_request);
-    file_service.write_data(data_file_path, requests);
-    return requests;
+    return file_service.read_data(data_file_path).map(normalize_request);
 }
 
 function init(file_path) {
