@@ -1,52 +1,61 @@
 class Ajax {
-    async get(url) {
-        return this._request(url, {
-            method: "GET"
-        });
+    get(url, callback) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.send();
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                this._handleResponse(xhr, callback);
+            }
+        };
     }
 
-    async post(url, data) {
-        return this._request(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
+    post(url, data, callback) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(data));
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                this._handleResponse(xhr, callback);
+            }
+        };
     }
 
-    async patch(url, data) {
-        return this._request(url, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
+    patch(url, data, callback) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("PATCH", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(data));
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                this._handleResponse(xhr, callback);
+            }
+        };
     }
 
-    async delete(url) {
-        return this._request(url, {
-            method: "DELETE"
-        });
+    delete(url, callback) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("DELETE", url);
+        xhr.send();
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                this._handleResponse(xhr, callback);
+            }
+        };
     }
 
-    async _request(url, options) {
+    _handleResponse(xhr, callback) {
         try {
-            const response = await fetch(url, options);
-            const response_text = await response.text();
-
-            return {
-                data: response_text ? JSON.parse(response_text) : null,
-                status: response.status
-            };
+            const data = xhr.responseText ? JSON.parse(xhr.responseText) : null;
+            callback(data, xhr.status);
         } catch (error) {
-            console.error("Ошибка выполнения запроса:", error);
-
-            return {
-                data: null,
-                status: 0
-            };
+            console.error("Ошибка парсинга JSON:", error);
+            callback(null, xhr.status);
         }
     }
 }
