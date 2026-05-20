@@ -48,24 +48,6 @@
     "result": 2
   },
   {
-    "id": 8,
-    "title": "Факториал",
-    "description": "Вычислить факториал числа n",
-    "type": "factorial",
-    "status": "done",
-    "n": 3,
-    "result": 6
-  },
-  {
-    "id": 9,
-    "title": "Факториал",
-    "description": "Вычислить факториал числа n",
-    "type": "factorial",
-    "status": "done",
-    "n": 2,
-    "result": 2
-  },
-  {
     "id": 10,
     "title": "Факториал",
     "description": "Вычислить факториал числа n",
@@ -80,8 +62,8 @@
     "description": "Вычислить факториал числа n",
     "type": "factorial",
     "status": "done",
-    "n": 11,
-    "result": 39916800
+    "n": 5,
+    "result": 120
   },
   {
     "id": 12,
@@ -100,5 +82,15 @@
     "status": "done",
     "numbers": "1, 2, 5",
     "result": 30
+  },
+  {
+    "id": 14,
+    "title": "123123",
+    "description": "Вычислить значение выражения при заданном x",
+    "type": "solve",
+    "status": "done",
+    "expression": "x*x+x+1",
+    "x": 12,
+    "result": 157
   }
 ]
