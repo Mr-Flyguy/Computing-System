@@ -62,7 +62,7 @@ export class MainPage {
                         </div>
 
                         <div class="request-counter">
-                            <span id="service-counter">${services.length} услуги</span>
+                            <span id="service-counter">Кол-во услуг: ${services.length}</span>
                         </div>
                     </div>
 
@@ -129,7 +129,7 @@ export class MainPage {
             );
         });
 
-        this.counter_root.textContent = `${services.length} услуги`;
+        this.counter_root.textContent = `Кол-во услуг: ${services.length}`;
         this.empty_state_root.classList.toggle("d-none", filtered_services.length > 0);
     }
 

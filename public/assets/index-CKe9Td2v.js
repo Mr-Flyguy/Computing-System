@@ -3966,7 +3966,7 @@ void main() {
                         </div>
 
                         <div class="request-counter">
-                            <span id="service-counter">${e.length} услуги</span>
+                            <span id="service-counter">Кол-во услуг: ${e.length}</span>
                         </div>
                     </div>
 
@@ -3994,4 +3994,4 @@ void main() {
                     По вашему запросу услуги не найдены.
                 </div>
             </div>
-        `}click_card(e){const t=Number(e.target.dataset.id);new sl(this.parent,t).render()}handle_search(e){this.search_query=e.target.value,this.update_service_list()}add_service(){l_(),this.update_service_list()}delete_service(e){const t=Number(e.target.dataset.id);u_(t),this.update_service_list()}update_service_list(){const e=Lr(),t=this.get_filtered_services();this.request_list_root.innerHTML="",t.forEach(n=>{new hl(this.request_list_root).render(n,this.click_card.bind(this),this.delete_service.bind(this))}),this.counter_root.textContent=`${e.length} услуги`,this.empty_state_root.classList.toggle("d-none",t.length>0)}render(){this.parent.innerHTML="",this.parent.insertAdjacentHTML("beforeend",this.getHTML()),this.search_input.addEventListener("input",this.handle_search.bind(this)),new Cs(this.add_service_button_root).render("Добавить услугу","add-service-action",this.add_service.bind(this),"btn btn-danger pm-btn"),this.update_service_list()}}const h_=document.getElementById("root"),d_=new rl(h_);d_.render();
+        `}click_card(e){const t=Number(e.target.dataset.id);new sl(this.parent,t).render()}handle_search(e){this.search_query=e.target.value,this.update_service_list()}add_service(){l_(),this.update_service_list()}delete_service(e){const t=Number(e.target.dataset.id);u_(t),this.update_service_list()}update_service_list(){const e=Lr(),t=this.get_filtered_services();this.request_list_root.innerHTML="",t.forEach(n=>{new hl(this.request_list_root).render(n,this.click_card.bind(this),this.delete_service.bind(this))}),this.counter_root.textContent=`Кол-во услуг: ${e.length}`,this.empty_state_root.classList.toggle("d-none",t.length>0)}render(){this.parent.innerHTML="",this.parent.insertAdjacentHTML("beforeend",this.getHTML()),this.search_input.addEventListener("input",this.handle_search.bind(this)),new Cs(this.add_service_button_root).render("Добавить услугу","add-service-action",this.add_service.bind(this),"btn btn-danger pm-btn"),this.update_service_list()}}const h_=document.getElementById("root"),d_=new rl(h_);d_.render();
