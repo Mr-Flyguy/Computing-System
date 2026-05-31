@@ -30,7 +30,7 @@ export class ServicePage {
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
 
         const service_header = new ServiceHeaderComponent(this.page_root);
-        service_header.render("ДЗ с алгоритмами и моделью", this.click_home.bind(this));
+        service_header.render(this.click_home.bind(this));
 
         const service = get_calculation_type_by_id(this.id);
 
