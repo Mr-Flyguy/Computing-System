@@ -6,6 +6,14 @@ export function isPalindrom(value) {
 
 export function sumOfUniqueElements(numbers) {
     if (!Array.isArray(numbers)) return 0;
-    const unique = Array.from(new Set(numbers.map((n) => Number(n))));
-    return unique.reduce((s, v) => s + (isNaN(v) ? 0 : v), 0);
+
+    // flatten one level of nested arrays (defensive, atomic change)
+    const flattened = numbers.reduce((acc, cur) => {
+        if (Array.isArray(cur)) return acc.concat(cur);
+        return acc.concat(cur);
+    }, []);
+
+    const numeric = flattened.map((n) => Number(n)).filter((n) => !isNaN(n));
+    const unique = Array.from(new Set(numeric));
+    return unique.reduce((s, v) => s + v, 0);
 }
