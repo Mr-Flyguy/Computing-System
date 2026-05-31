@@ -1,4 +1,4 @@
-async function request(url) {
+async function fetch_json(url) {
     try {
         const response = await fetch(url);
         const text = await response.text();
@@ -19,9 +19,9 @@ async function request(url) {
 const BASE_URL = "/calculation_type";
 
 export async function getCalculationTypes() {
-    return request(BASE_URL);
+    return fetch_json(BASE_URL);
 }
 
 export async function getCalculationTypeById(id) {
-    return request(`${BASE_URL}/${id}`);
+    return fetch_json(`${BASE_URL}/${id}`);
 }

@@ -2,15 +2,15 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-export class ServiceModelComponent {
+export class CalculationTypeModelComponent {
     constructor(parent) {
         this.parent = parent;
     }
 
     getHTML() {
         return `
-            <div class="request-model-block">
-                <div id="request-model-viewer" class="request-model-viewer"></div>
+            <div class="calculation-type-model-block">
+                <div id="calculation-type-model-viewer" class="calculation-type-model-viewer"></div>
             </div>
         `;
     }
@@ -18,7 +18,7 @@ export class ServiceModelComponent {
     render() {
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
 
-        const container = document.getElementById("request-model-viewer");
+        const container = document.getElementById("calculation-type-model-viewer");
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xf8f8f8);
