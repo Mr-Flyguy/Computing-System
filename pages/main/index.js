@@ -125,12 +125,6 @@ export class MainPage {
         form_page.render();
     }
 
-    open_edit_page(event) {
-        const calculation_type_id = Number(event.currentTarget.dataset.id);
-        const form_page = new CalculationTypeFormPage(this.parent, "edit", calculation_type_id);
-        form_page.render();
-    }
-
     async load_calculation_types() {
         this.is_loading = true;
         this.error_message = "";
@@ -204,7 +198,6 @@ export class MainPage {
             calculation_type_card.render(
                 calculation_type_data,
                 this.click_card.bind(this),
-                this.open_edit_page.bind(this),
                 this.delete_card.bind(this)
             );
         });
