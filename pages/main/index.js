@@ -1,20 +1,16 @@
 import { ServiceCardComponent } from "../../components/service-card/index.js";
-import { ButtonComponent } from "../../components/button/index.js";
 import { ServicePage } from "../service/index.js";
-import {
-    create_calculation_type_copy_from_first,
-    get_calculation_types,
-    remove_calculation_type_by_id
-} from "../../utils/service-storage.js";
+import { getCalculationTypes } from "../../modules/calculation-type-api.js";
 
 export class MainPage {
     constructor(parent) {
         this.parent = parent;
         this.search_query = "";
+        this.services = [];
     }
 
-    get request_list_root() {
-        return document.getElementById("request-list");
+    get service_list_root() {
+        return document.getElementById("service-list");
     }
 
     get search_input() {
@@ -22,32 +18,26 @@ export class MainPage {
     }
 
     get empty_state_root() {
-        return document.getElementById("service-search-empty");
+        return document.getElementById("service-empty-state");
     }
 
     get counter_root() {
         return document.getElementById("service-counter");
     }
 
-    get add_service_button_root() {
-        return document.getElementById("add-service-button");
-    }
-
     get_filtered_services() {
-        const services = get_calculation_types();
         const normalized_query = this.search_query.trim().toLowerCase();
 
         if (!normalized_query) {
-            return services;
+            return this.services;
         }
 
-        return services.filter((service) =>
+        return this.services.filter((service) =>
             service.title.toLowerCase().includes(normalized_query)
         );
     }
 
     getHTML() {
-        const services = get_calculation_types();
         const filtered_services = this.get_filtered_services();
 
         return `
@@ -57,12 +47,12 @@ export class MainPage {
                         <div>
                             <h1 class="hero-title">Услуги вычислений</h1>
                             <p class="hero-text">
-                                Каталог вычислительных услуг: факториал, НОД и сумма квадратов
+                                Каталог вычислительных услуг: факториал, НОД и сумма уникальных элементов
                             </p>
                         </div>
 
                         <div class="request-counter">
-                            <span id="service-counter">Кол-во услуг: ${services.length}</span>
+                            <span id="service-counter">Кол-во услуг: ${this.services.length}</span>
                         </div>
                     </div>
 
@@ -77,14 +67,11 @@ export class MainPage {
                         >
                     </div>
 
-                    <div class="mt-3">
-                        <div id="add-service-button" class="d-inline-flex"></div>
-                    </div>
                 </div>
 
-                <div id="request-list" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4"></div>
+                <div id="service-list" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4"></div>
                 <div
-                    id="service-search-empty"
+                    id="service-empty-state"
                     class="request-history-empty${filtered_services.length ? " d-none" : ""}"
                 >
                     По вашему запросу услуги не найдены.
@@ -93,9 +80,8 @@ export class MainPage {
         `;
     }
 
-    click_card(event) {
-        const service_id = Number(event.target.dataset.id);
-        const service_page = new ServicePage(this.parent, service_id);
+    click_card(service_data) {
+        const service_page = new ServicePage(this.parent, service_data.id, service_data);
         service_page.render();
     }
 
@@ -104,48 +90,25 @@ export class MainPage {
         this.update_service_list();
     }
 
-    add_service() {
-        create_calculation_type_copy_from_first();
-        this.update_service_list();
-    }
-
-    delete_service(event) {
-        const service_id = Number(event.target.dataset.id);
-        remove_calculation_type_by_id(service_id);
-        this.update_service_list();
-    }
-
     update_service_list() {
-        const services = get_calculation_types();
         const filtered_services = this.get_filtered_services();
-        this.request_list_root.innerHTML = "";
+        this.service_list_root.innerHTML = "";
 
         filtered_services.forEach((service_data) => {
-            const service_card = new ServiceCardComponent(this.request_list_root);
-            service_card.render(
-                service_data,
-                this.click_card.bind(this),
-                this.delete_service.bind(this)
-            );
+            const service_card = new ServiceCardComponent(this.service_list_root);
+            service_card.render(service_data, this.click_card.bind(this));
         });
 
-        this.counter_root.textContent = `Кол-во услуг: ${services.length}`;
+        this.counter_root.textContent = `Кол-во услуг: ${this.services.length}`;
         this.empty_state_root.classList.toggle("d-none", filtered_services.length > 0);
     }
 
-    render() {
+    async render() {
         this.parent.innerHTML = "";
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
         this.search_input.addEventListener("input", this.handle_search.bind(this));
-
-        const add_service_button = new ButtonComponent(this.add_service_button_root);
-        add_service_button.render(
-            "Добавить услугу",
-            "add-service-action",
-            this.add_service.bind(this),
-            "btn btn-danger pm-btn"
-        );
-
+        const { data, status } = await getCalculationTypes();
+        this.services = status === 200 && Array.isArray(data) ? data : [];
         this.update_service_list();
     }
 }
