@@ -16,7 +16,11 @@ export class ServiceDetailsComponent {
             return "Вычисление выражения";
         }
 
-        return "Сумма квадратов";
+        if (calculation_type === "sum_unique_elements") {
+            return "Сумма уникальных элементов";
+        }
+
+        return "Сумма уникальных элементов";
     }
 
     getHTML(service_data) {

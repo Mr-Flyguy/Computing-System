@@ -15,9 +15,9 @@ export const initial_services = [
     },
     {
         id: 3,
-        title: "Сумма квадратов",
-        description: "Подсчёт суммы квадратов элементов массива чисел для последующего анализа данных.",
-        calculation_type: "sum_of_squares",
+        title: "Сумма уникальных элементов",
+        description: "Подсчёт суммы уникальных элементов в массиве чисел для последующего анализа данных.",
+        calculation_type: "sum_unique_elements",
         image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=80"
     },
     {
