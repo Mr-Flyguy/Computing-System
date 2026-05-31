@@ -1,4 +1,4 @@
-export class ServiceHeaderComponent {
+export class CalculationTypeHeaderComponent {
     constructor(parent) {
         this.parent = parent;
     }

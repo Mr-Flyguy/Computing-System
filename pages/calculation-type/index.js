@@ -1,22 +1,22 @@
-import { ServiceDetailsComponent } from "../../components/service-details/index.js";
-import { ServiceHeaderComponent } from "../../components/service-header/index.js";
+import { CalculationTypeDetailsComponent } from "../../components/calculation-type-details/index.js";
+import { CalculationTypeHeaderComponent } from "../../components/calculation-type-header/index.js";
 import { MainPage } from "../main/index.js";
 import { getCalculationTypeById } from "../../modules/calculation-type-api.js";
 
-export class ServicePage {
-    constructor(parent, id, service_data = null) {
+export class CalculationTypePage {
+    constructor(parent, id, calculation_type_data = null) {
         this.parent = parent;
         this.id = Number(id);
-        this.service_data = service_data;
+        this.calculation_type_data = calculation_type_data;
     }
 
     get page_root() {
-        return document.getElementById("service-page");
+        return document.getElementById("calculation-type-page");
     }
 
     getHTML() {
         return `
-            <div id="service-page" class="app-container"></div>
+            <div id="calculation-type-page" class="app-container"></div>
         `;
     }
 
@@ -29,16 +29,16 @@ export class ServicePage {
         this.parent.innerHTML = "";
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
 
-        const service_header = new ServiceHeaderComponent(this.page_root);
-        service_header.render(this.click_home.bind(this));
+        const calculation_type_header = new CalculationTypeHeaderComponent(this.page_root);
+        calculation_type_header.render(this.click_home.bind(this));
 
-        const service = this.service_data || await this.load_service();
+        const calculation_type = this.calculation_type_data || await this.load_calculation_type();
 
-        if (!service) {
+        if (!calculation_type) {
             this.page_root.insertAdjacentHTML(
                 "beforeend",
                 `
-                    <div class="service-page-card">
+                    <div class="calculation-type-page-card">
                         <h2 class="mb-2">Услуга не найдена</h2>
                         <p class="text-muted mb-0">Выберите услугу из каталога на главной странице.</p>
                     </div>
@@ -47,11 +47,11 @@ export class ServicePage {
             return;
         }
 
-        const service_details_component = new ServiceDetailsComponent(this.page_root);
-        service_details_component.render(service);
+        const calculation_type_details_component = new CalculationTypeDetailsComponent(this.page_root);
+        calculation_type_details_component.render(calculation_type);
     }
 
-    async load_service() {
+    async load_calculation_type() {
         const { data, status } = await getCalculationTypeById(this.id);
 
         if (status !== 200) {

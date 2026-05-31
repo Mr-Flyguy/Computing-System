@@ -1,44 +1,44 @@
-import { ServiceCardComponent } from "../../components/service-card/index.js";
-import { ServicePage } from "../service/index.js";
+import { CalculationTypeCardComponent } from "../../components/calculation-type-card/index.js";
+import { CalculationTypePage } from "../calculation-type/index.js";
 import { getCalculationTypes } from "../../modules/calculation-type-api.js";
 
 export class MainPage {
     constructor(parent) {
         this.parent = parent;
         this.search_query = "";
-        this.services = [];
+        this.calculation_types = [];
     }
 
-    get service_list_root() {
-        return document.getElementById("service-list");
+    get calculation_type_list_root() {
+        return document.getElementById("calculation-type-list");
     }
 
     get search_input() {
-        return document.getElementById("service-search-input");
+        return document.getElementById("calculation-type-search-input");
     }
 
     get empty_state_root() {
-        return document.getElementById("service-empty-state");
+        return document.getElementById("calculation-type-empty-state");
     }
 
     get counter_root() {
-        return document.getElementById("service-counter");
+        return document.getElementById("calculation-type-counter");
     }
 
-    get_filtered_services() {
+    get_filtered_calculation_types() {
         const normalized_query = this.search_query.trim().toLowerCase();
 
         if (!normalized_query) {
-            return this.services;
+            return this.calculation_types;
         }
 
-        return this.services.filter((service) =>
-            service.title.toLowerCase().includes(normalized_query)
+        return this.calculation_types.filter((calculation_type) =>
+            calculation_type.title.toLowerCase().includes(normalized_query)
         );
     }
 
     getHTML() {
-        const filtered_services = this.get_filtered_services();
+        const filtered_calculation_types = this.get_filtered_calculation_types();
 
         return `
             <div id="main-page" class="app-container">
@@ -51,16 +51,16 @@ export class MainPage {
                             </p>
                         </div>
 
-                        <div class="request-counter">
-                            <span id="service-counter">Кол-во услуг: ${this.services.length}</span>
+                        <div class="calculation-type-counter-badge">
+                            <span id="calculation-type-counter">Кол-во услуг: ${this.calculation_types.length}</span>
                         </div>
                     </div>
 
-                    <div class="service-search-block">
-                        <label class="service-search-label" for="service-search-input">Поиск по названию</label>
+                    <div class="calculation-type-search-block">
+                        <label class="calculation-type-search-label" for="calculation-type-search-input">Поиск по названию</label>
                         <input
-                            id="service-search-input"
-                            class="form-control service-search-input"
+                            id="calculation-type-search-input"
+                            class="form-control calculation-type-search-input"
                             type="text"
                             placeholder="Например, сумма или факториал"
                             value="${this.search_query}"
@@ -68,10 +68,10 @@ export class MainPage {
                     </div>
                 </div>
 
-                <div id="service-list" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4"></div>
+                <div id="calculation-type-list" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4"></div>
                 <div
-                    id="service-empty-state"
-                    class="request-history-empty${filtered_services.length ? " d-none" : ""}"
+                    id="calculation-type-empty-state"
+                    class="calculation-type-empty${filtered_calculation_types.length ? " d-none" : ""}"
                 >
                     По вашему запросу услуги не найдены.
                 </div>
@@ -79,27 +79,27 @@ export class MainPage {
         `;
     }
 
-    click_card(service_data) {
-        const service_page = new ServicePage(this.parent, service_data.id, service_data);
-        service_page.render();
+    click_card(calculation_type_data) {
+        const calculation_type_page = new CalculationTypePage(this.parent, calculation_type_data.id, calculation_type_data);
+        calculation_type_page.render();
     }
 
     handle_search(event) {
         this.search_query = event.target.value;
-        this.update_service_list();
+        this.update_calculation_type_list();
     }
 
-    update_service_list() {
-        const filtered_services = this.get_filtered_services();
-        this.service_list_root.innerHTML = "";
+    update_calculation_type_list() {
+        const filtered_calculation_types = this.get_filtered_calculation_types();
+        this.calculation_type_list_root.innerHTML = "";
 
-        filtered_services.forEach((service_data) => {
-            const service_card = new ServiceCardComponent(this.service_list_root);
-            service_card.render(service_data, this.click_card.bind(this));
+        filtered_calculation_types.forEach((calculation_type_data) => {
+            const calculation_type_card = new CalculationTypeCardComponent(this.calculation_type_list_root);
+            calculation_type_card.render(calculation_type_data, this.click_card.bind(this));
         });
 
-        this.counter_root.textContent = `Кол-во услуг: ${this.services.length}`;
-        this.empty_state_root.classList.toggle("d-none", filtered_services.length > 0);
+        this.counter_root.textContent = `Кол-во услуг: ${this.calculation_types.length}`;
+        this.empty_state_root.classList.toggle("d-none", filtered_calculation_types.length > 0);
     }
 
     async render() {
@@ -108,7 +108,7 @@ export class MainPage {
         this.search_input.addEventListener("input", this.handle_search.bind(this));
 
         const { data, status } = await getCalculationTypes();
-        this.services = status === 200 && Array.isArray(data) ? data : [];
-        this.update_service_list();
+        this.calculation_types = status === 200 && Array.isArray(data) ? data : [];
+        this.update_calculation_type_list();
     }
 }
