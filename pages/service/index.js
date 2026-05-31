@@ -1,6 +1,6 @@
 import { ServiceDetailsComponent } from "../../components/service-details/index.js";
 import { ServiceModelComponent } from "../../components/service-model/index.js";
-import { BackButtonComponent } from "../../components/back-button/index.js";
+import { ServiceHeaderComponent } from "../../components/service-header/index.js";
 import { MainPage } from "../main/index.js";
 import { get_calculation_type_by_id } from "../../utils/service-storage.js";
 
@@ -25,12 +25,17 @@ export class ServicePage {
         main_page.render();
     }
 
+    click_home() {
+        const main_page = new MainPage(this.parent);
+        main_page.render();
+    }
+
     render() {
         this.parent.innerHTML = "";
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
 
-        const back_button = new BackButtonComponent(this.page_root);
-        back_button.render(this.click_back.bind(this));
+        const service_header = new ServiceHeaderComponent(this.page_root);
+        service_header.render(this.click_home.bind(this));
 
         const service = get_calculation_type_by_id(this.id);
 
