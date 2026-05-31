@@ -185,15 +185,15 @@ body {
     margin-bottom: 24px;
 }
 
-.calculation_type-calculation-type-form-block {
+.calculation-type-form-block {
     background: #ffffff;
     border-radius: 24px;
     padding: 0;
 }
 
-.calculation_type-calculation-type-form-block textarea,
-.calculation_type-calculation-type-form-block input,
-.calculation_type-calculation-type-form-block select {
+.calculation-type-form-block textarea,
+.calculation-type-form-block input,
+.calculation-type-form-block select {
     border-radius: 14px;
 }
 
