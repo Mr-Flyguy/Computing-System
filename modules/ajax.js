@@ -1,11 +1,13 @@
 class Ajax {
-    async get(url) {
-        return this._send(url, {
+    get(url, params = {}) {
+        const full_url = this._build_url(url, params);
+
+        return this._send(full_url, {
             method: "GET"
         });
     }
 
-    async post(url, data) {
+    post(url, data) {
         return this._send(url, {
             method: "POST",
             headers: {
@@ -15,7 +17,7 @@ class Ajax {
         });
     }
 
-    async patch(url, data) {
+    patch(url, data) {
         return this._send(url, {
             method: "PATCH",
             headers: {
@@ -25,29 +27,57 @@ class Ajax {
         });
     }
 
-    async delete(url) {
+    delete(url) {
         return this._send(url, {
             method: "DELETE"
         });
     }
 
-    async _send(url, options) {
-        try {
-            const response = await fetch(url, options);
-            const response_text = await response.text();
+    _build_url(url, params) {
+        const query = new URLSearchParams();
 
-            return {
-                data: response_text ? JSON.parse(response_text) : null,
-                status: response.status
-            };
-        } catch (error) {
-            console.error("Ошибка выполнения запроса:", error);
+        Object.entries(params).forEach(([key, value]) => {
+            if (value !== undefined && value !== null && String(value).trim() !== "") {
+                query.append(key, value);
+            }
+        });
 
-            return {
-                data: null,
-                status: 0
+        const query_string = query.toString();
+        return query_string ? `${url}?${query_string}` : url;
+    }
+
+    _send(url, options) {
+        return new Promise((resolve) => {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open(options.method, url, true);
+            xhr.timeout = 10000;
+
+            Object.entries(options.headers || {}).forEach(([header, value]) => {
+                xhr.setRequestHeader(header, value);
+            });
+
+            xhr.onload = () => {
+                const response_text = xhr.responseText;
+                let data = null;
+
+                try {
+                    data = response_text ? JSON.parse(response_text) : null;
+                } catch (error) {
+                    console.error("Ошибка разбора JSON:", error);
+                }
+
+                resolve({
+                    data,
+                    status: xhr.status
+                });
             };
-        }
+
+            xhr.onerror = () => resolve({ data: null, status: 0 });
+            xhr.ontimeout = () => resolve({ data: null, status: 0 });
+
+            xhr.send(options.body || null);
+        });
     }
 }
 

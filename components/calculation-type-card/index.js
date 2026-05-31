@@ -6,28 +6,27 @@ export class CalculationTypeCardComponent {
     }
 
     get_type_label(calculation_type_data) {
-        if (calculation_type_data.calculation_type === "factorial") {
-            return "Комбинаторика";
-        }
+        const labels = {
+            factorial: "Комбинаторика",
+            gcd: "Целые числа",
+            solve: "Алгебра",
+            solve_expression: "Алгебра",
+            sum_of_squares: "Массивы",
+            sum_unique_elements: "Массивы"
+        };
 
-        if (calculation_type_data.calculation_type === "gcd") {
-            return "Целые числа";
-        }
-
-        if (calculation_type_data.calculation_type === "solve_expression") {
-            return "Алгебра";
-        }
-
-        return "Массивы";
+        return labels[calculation_type_data.calculation_type] || "Вычисления";
     }
 
     getHTML(calculation_type_data) {
+        const image = calculation_type_data.image || "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1200&q=80";
+
         return `
             <div class="col">
                 <div class="card calculation-type-card">
                     <img
                         class="calculation-type-card-image"
-                        src="${calculation_type_data.image}"
+                        src="${image}"
                         alt="Изображение услуги ${calculation_type_data.title}"
                     >
 

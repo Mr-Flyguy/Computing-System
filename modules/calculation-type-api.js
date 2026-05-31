@@ -1,11 +1,11 @@
 import { ajax } from "./ajax.js";
 
-const BASE_URL = "/calculation_type";
+const BASE_URL = "http://localhost:3000/calculation_type";
 
-export async function getCalculationTypes() {
-    return ajax.get(BASE_URL);
+export function get_calculation_types(filters = {}) {
+    return ajax.get(BASE_URL, filters);
 }
 
-export async function getCalculationTypeById(id) {
+export function get_calculation_type_by_id(id) {
     return ajax.get(`${BASE_URL}/${id}`);
 }
