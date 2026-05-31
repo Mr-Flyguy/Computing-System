@@ -99,6 +99,6 @@ export class CalculationTypeCardComponent {
         );
 
         const delete_button_element = document.getElementById(`calculation_type-delete-${calculation_type_data.id}`);
-        delete_button_element.dataset.ids = (calculation_type_data.source_ids || [calculation_type_data.id]).join(",");
+        delete_button_element.dataset.id = calculation_type_data.id;
     }
 }
