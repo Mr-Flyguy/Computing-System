@@ -1,27 +1,33 @@
 const calculation_type_store = require("../models/calculation_type_store");
 
-function validate_calculation_type_payload(payload = {}, is_partial = false) {
-    const { title, description, calculation_type, status, numbers } = payload;
+const ALLOWED_CALCULATION_TYPES = new Set([
+    "factorial",
+    "gcd",
+    "sum_of_squares",
+    "solve_expression",
+    "sum_unique_elements"
+]);
 
-    if (!is_partial && (!title || !description || !calculation_type || !status)) {
+function validate_calculation_type_payload(payload = {}, is_partial = false) {
+    const { title, description, calculation_type } = payload;
+
+    if (!is_partial && (!title || !description || !calculation_type)) {
         return "Не все обязательные поля заполнены";
     }
 
     if (
-        calculation_type === "sum_unique_elements" &&
-        numbers !== undefined &&
-        typeof numbers !== "string" &&
-        !Array.isArray(numbers)
+        calculation_type !== undefined &&
+        !ALLOWED_CALCULATION_TYPES.has(calculation_type)
     ) {
-        return "Для sum_unique_elements поле numbers должно быть строкой или массивом чисел";
+        return "Неизвестный тип вычислений";
     }
 
     return null;
 }
 
 function get_all_calculation_types(req, res) {
-    const { title, status, calculation_type } = req.query;
-    const calculation_types = calculation_type_store.find_all({ title, status, calculation_type });
+    const { title, calculation_type } = req.query;
+    const calculation_types = calculation_type_store.find_all({ title, calculation_type });
     res.json(calculation_types);
 }
 

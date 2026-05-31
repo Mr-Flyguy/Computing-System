@@ -1,96 +1,32 @@
 [
   {
+    "id": 1,
+    "title": "Факториал",
+    "description": "Вычислить факториал числа n",
+    "calculation_type": "factorial"
+  },
+  {
     "id": 2,
-    "title": "Сумма квадратов",
-    "description": "Вычислить сумму квадратов введённого массива чисел",
-    "calculation_type": "sum_of_squares",
-    "status": "done",
-    "numbers": "1,1,2",
-    "result": 6
+    "title": "НОД",
+    "description": "Вычислить наибольший общий делитель двух чисел",
+    "calculation_type": "gcd"
   },
   {
     "id": 3,
-    "title": "НОД",
-    "description": "Вычислить НОД двух чисел",
-    "calculation_type": "gcd",
-    "status": "done",
-    "a": 1,
-    "b": 2,
-    "result": 1
+    "title": "Сумма квадратов",
+    "description": "Вычислить сумму квадратов введённого массива чисел",
+    "calculation_type": "sum_of_squares"
   },
   {
     "id": 4,
     "title": "Вычисление выражения",
     "description": "Вычислить значение выражения при заданном x",
-    "calculation_type": "solve",
-    "status": "done",
-    "expression": "3x",
-    "x": 3,
-    "result": 33
+    "calculation_type": "factorial"
   },
   {
     "id": 5,
-    "title": "Сумма квадратов",
-    "description": "Тестовая заявка",
-    "calculation_type": "sum_of_squares",
-    "status": "done",
-    "numbers": "1, 2, 3",
-    "result": 14
-  },
-  {
-    "id": 7,
-    "title": "НОД",
-    "description": "Вычислить НОД двух чисел",
-    "calculation_type": "gcd",
-    "status": "done",
-    "a": 4,
-    "b": 2,
-    "result": 2
-  },
-  {
-    "id": 10,
-    "title": "Факториал",
-    "description": "Вычислить факториал числа n",
-    "calculation_type": "factorial",
-    "status": "done",
-    "n": 12,
-    "result": 479001600
-  },
-  {
-    "id": 11,
-    "title": "Факториал",
-    "description": "Вычислить факториал числа n",
-    "calculation_type": "factorial",
-    "status": "done",
-    "n": 5,
-    "result": 120
-  },
-  {
-    "id": 12,
-    "title": "Сумма квадратов",
-    "description": "Вычислить сумму квадратов введённого массива чисел",
-    "calculation_type": "sum_of_squares",
-    "status": "done",
-    "numbers": "1,1,3",
-    "result": 11
-  },
-  {
-    "id": 13,
-    "title": "Сумма квадратов",
-    "description": "Вычислить сумму квадратов введённого массива чисел",
-    "calculation_type": "sum_of_squares",
-    "status": "done",
-    "numbers": "1, 2, 5",
-    "result": 30
-  },
-  {
-    "id": 14,
-    "title": "123123",
-    "description": "Вычислить значение выражения при заданном x",
-    "calculation_type": "solve",
-    "status": "done",
-    "expression": "x*x+x+1",
-    "x": 12,
-    "result": 157
+    "title": "Сумма уникальных элементов",
+    "description": "Вычислить сумму уникальных элементов массива",
+    "calculation_type": "sum_unique_elements"
   }
 ]

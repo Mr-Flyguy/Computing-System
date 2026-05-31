@@ -1,5 +1,7 @@
 const file_store = require("./file_store");
 
+const CATALOG_FIELDS = ["id", "title", "description", "calculation_type", "image"];
+
 let data_file_path;
 
 function normalize_calculation_type(calculation_type) {
@@ -7,21 +9,13 @@ function normalize_calculation_type(calculation_type) {
         return calculation_type;
     }
 
-    const normalized_calculation_type = {
-        ...calculation_type
-    };
+    const normalized_calculation_type = {};
 
-    if (
-        normalized_calculation_type.calculation_type === "sum_unique_elements" &&
-        Array.isArray(normalized_calculation_type.numbers)
-    ) {
-        const flattened = normalized_calculation_type.numbers.reduce((acc, cur) => {
-            if (Array.isArray(cur)) return acc.concat(cur);
-            return acc.concat(cur);
-        }, []);
-
-        normalized_calculation_type.numbers = flattened;
-    }
+    CATALOG_FIELDS.forEach((field) => {
+        if (calculation_type[field] !== undefined) {
+            normalized_calculation_type[field] = calculation_type[field];
+        }
+    });
 
     return normalized_calculation_type;
 }
@@ -41,12 +35,6 @@ function find_all(filters) {
     if (filters.title) {
         calculation_types = calculation_types.filter((calculation_type) =>
             calculation_type.title.toLowerCase().includes(filters.title.toLowerCase())
-        );
-    }
-
-    if (filters.status) {
-        calculation_types = calculation_types.filter(
-            (calculation_type) => calculation_type.status.toLowerCase() === filters.status.toLowerCase()
         );
     }
 
