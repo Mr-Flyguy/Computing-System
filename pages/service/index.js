@@ -1,18 +1,12 @@
 import { ServiceDetailsComponent } from "../../components/service-details/index.js";
-import { ServiceModelComponent } from "../../components/service-model/index.js";
 import { BackButtonComponent } from "../../components/back-button/index.js";
-import { ButtonComponent } from "../../components/button/index.js";
 import { MainPage } from "../main/index.js";
-import { RequestFormPage } from "../request-form/index.js";
-import { ajax } from "../../modules/ajax.js";
-import { requestUrls } from "../../modules/requestUrls.js";
 import { get_service_by_id } from "../../utils/service-storage.js";
 
 export class ServicePage {
     constructor(parent, id) {
         this.parent = parent;
         this.id = Number(id);
-        this.search_query = "";
     }
 
     get page_root() {
@@ -25,70 +19,18 @@ export class ServicePage {
         `;
     }
 
-    get request_type() {
-        const service = get_service_by_id(this.id);
-
-        if (!service) {
-            return "";
-        }
-
-        if (service.calculation_type === "solve_expression") {
-            return "solve";
-        }
-
-        return service.calculation_type;
-    }
-
     click_back() {
         const main_page = new MainPage(this.parent);
         main_page.render();
     }
 
-    click_create() {
-        const request_form_page = new RequestFormPage(this.parent, this.id);
-        request_form_page.render();
-    }
+    render() {
+        this.parent.innerHTML = "";
+        this.parent.insertAdjacentHTML("beforeend", this.getHTML());
 
-    click_edit_request(event) {
-        const request_id = Number(event.target.dataset.id);
-        const request_form_page = new RequestFormPage(this.parent, this.id, request_id);
-        request_form_page.render();
-    }
+        const back_button = new BackButtonComponent(this.page_root);
+        back_button.render(this.click_back.bind(this));
 
-    handle_search(event) {
-        event.preventDefault();
-        this.search_query = document.getElementById("request-search-input").value.trim();
-        this.render();
-    }
-
-    render_data(service_data, requests) {
-        const service_details_component = new ServiceDetailsComponent(this.page_root);
-        service_details_component.render(service_data, requests, this.search_query);
-
-        const create_button = new ButtonComponent(document.getElementById("request-create-button"));
-        create_button.render(
-            "Новое вычисление",
-            "request-create-action",
-            this.click_create.bind(this),
-            "btn btn-danger pm-btn"
-        );
-
-        requests.forEach((request_data) => {
-            document
-                .getElementById(`request-edit-${request_data.id}`)
-                .addEventListener("click", this.click_edit_request.bind(this));
-        });
-
-        document
-            .getElementById("request-search-form")
-            .addEventListener("submit", this.handle_search.bind(this));
-
-        const model_root = document.getElementById("service-model-root");
-        const service_model = new ServiceModelComponent(model_root);
-        service_model.render();
-    }
-
-    async get_data() {
         const service = get_service_by_id(this.id);
 
         if (!service) {
@@ -104,38 +46,7 @@ export class ServicePage {
             return;
         }
 
-        const { data, status } = await ajax.get(
-            requestUrls.getRequests({
-                type: this.request_type,
-                title: this.search_query
-            })
-        );
-
-        if (status === 200) {
-            this.render_data(service, data);
-            return;
-        }
-
-        this.page_root.insertAdjacentHTML(
-            "beforeend",
-            `
-                <div class="service-page-card">
-                    <h2 class="mb-2">Не удалось загрузить данные</h2>
-                    <p class="text-muted mb-0">
-                        Попробуйте обновить страницу ещё раз.
-                    </p>
-                </div>
-            `
-        );
-    }
-
-    render() {
-        this.parent.innerHTML = "";
-        this.parent.insertAdjacentHTML("beforeend", this.getHTML());
-
-        const back_button = new BackButtonComponent(this.page_root);
-        back_button.render(this.click_back.bind(this));
-
-        this.get_data();
+        const service_details_component = new ServiceDetailsComponent(this.page_root);
+        service_details_component.render(service);
     }
 }
