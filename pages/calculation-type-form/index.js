@@ -40,11 +40,11 @@ export class CalculationTypeFormPage {
     }
 
     get_selected(value) {
-        return this.calculation_type_data?.calculation_type === value ? "selected" : "";
-    }
+        if (value === "solve") {
+            return ["solve", "solve_expression"].includes(this.calculation_type_data?.calculation_type) ? "selected" : "";
+        }
 
-    get_status_selected(value) {
-        return this.calculation_type_data?.status === value ? "selected" : "";
+        return this.calculation_type_data?.calculation_type === value ? "selected" : "";
     }
 
     getHTML() {
@@ -59,7 +59,7 @@ export class CalculationTypeFormPage {
                 <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
                     <div>
                         <h2 class="mb-2">${this.title}</h2>
-                        <p class="text-muted mb-0">${this.mode === "edit" ? `ID: ${this.id}` : "Поля новой услуги вычислений"}</p>
+                        <p class="text-muted mb-0">${this.mode === "edit" ? `ID: ${this.id}` : "Поля нового типа вычислений"}</p>
                     </div>
                     <span class="calculation-type-status">Форма</span>
                 </div>
@@ -72,69 +72,19 @@ export class CalculationTypeFormPage {
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label" for="calculation-type-kind">Тип вычисления</label>
+                            <label class="form-label" for="calculation-type-kind">Тип</label>
                             <select id="calculation-type-kind" class="form-select calculation-type-form-input">
                                 <option value="factorial" ${this.get_selected("factorial")}>Факториал</option>
                                 <option value="gcd" ${this.get_selected("gcd")}>НОД</option>
                                 <option value="sum_of_squares" ${this.get_selected("sum_of_squares")}>Сумма квадратов</option>
                                 <option value="sum_unique_elements" ${this.get_selected("sum_unique_elements")}>Сумма уникальных элементов</option>
                                 <option value="solve" ${this.get_selected("solve")}>Вычисление выражения</option>
-                                <option value="solve_expression" ${this.get_selected("solve_expression")}>Вычисление выражения</option>
                             </select>
                         </div>
 
                         <div class="col-12">
                             <label class="form-label" for="calculation-type-description">Описание</label>
                             <textarea id="calculation-type-description" class="form-control calculation-type-form-input" rows="3">${this.get_value("description")}</textarea>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label" for="calculation-type-status-input">Статус</label>
-                            <select id="calculation-type-status-input" class="form-select calculation-type-form-input">
-                                <option value="new" ${this.get_status_selected("new")}>new</option>
-                                <option value="done" ${this.get_status_selected("done")}>done</option>
-                                <option value="error" ${this.get_status_selected("error")}>error</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label" for="calculation-type-image">Изображение</label>
-                            <input id="calculation-type-image" class="form-control calculation-type-form-input" type="url" value="${this.get_value("image")}">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label" for="calculation-type-n">n</label>
-                            <input id="calculation-type-n" class="form-control calculation-type-form-input" type="number" value="${this.get_value("n")}">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label" for="calculation-type-numbers">Массив чисел</label>
-                            <input id="calculation-type-numbers" class="form-control calculation-type-form-input" type="text" value="${this.get_value("numbers")}">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label" for="calculation-type-a">a</label>
-                            <input id="calculation-type-a" class="form-control calculation-type-form-input" type="number" value="${this.get_value("a")}">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label" for="calculation-type-b">b</label>
-                            <input id="calculation-type-b" class="form-control calculation-type-form-input" type="number" value="${this.get_value("b")}">
-                        </div>
-
-                        <div class="col-md-8">
-                            <label class="form-label" for="calculation-type-expression">Выражение</label>
-                            <input id="calculation-type-expression" class="form-control calculation-type-form-input" type="text" value="${this.get_value("expression")}">
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label" for="calculation-type-x">x</label>
-                            <input id="calculation-type-x" class="form-control calculation-type-form-input" type="number" value="${this.get_value("x")}">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label" for="calculation-type-result">Результат</label>
-                            <input id="calculation-type-result" class="form-control calculation-type-form-input" type="text" value="${this.get_value("result")}">
                         </div>
                     </div>
                 </form>

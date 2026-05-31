@@ -9,3 +9,7 @@ export function get_calculation_types(filters = {}) {
 export function get_calculation_type_by_id(id) {
     return ajax.get(`${BASE_URL}/${id}`);
 }
+
+export function delete_calculation_type(id) {
+    return ajax.delete(`${BASE_URL}/${id}`);
+}

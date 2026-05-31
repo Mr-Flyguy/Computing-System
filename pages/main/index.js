@@ -2,7 +2,15 @@ import { CalculationTypeCardComponent } from "../../components/calculation-type-
 import { ButtonComponent } from "../../components/button/index.js";
 import { CalculationTypePage } from "../calculation-type/index.js";
 import { CalculationTypeFormPage } from "../calculation-type-form/index.js";
-import { get_calculation_types } from "../../modules/calculation-type-api.js";
+import { delete_calculation_type, get_calculation_types } from "../../modules/calculation-type-api.js";
+
+const CALCULATION_TYPE_ORDER = [
+    "factorial",
+    "gcd",
+    "sum_of_squares",
+    "solve_expression",
+    "sum_unique_elements"
+];
 
 export class MainPage {
     constructor(parent) {
@@ -84,6 +92,24 @@ export class MainPage {
         calculation_type_page.render();
     }
 
+    async delete_card(event) {
+        const ids = event.currentTarget.dataset.ids
+            .split(",")
+            .map((id) => Number(id))
+            .filter(Boolean);
+
+        const results = await Promise.all(ids.map((id) => delete_calculation_type(id)));
+        const has_error = results.some(({ status }) => status !== 204);
+
+        if (has_error) {
+            this.error_message = "Не удалось удалить услугу вычислений.";
+            this.update_calculation_type_list();
+            return;
+        }
+
+        await this.load_calculation_types();
+    }
+
     handle_search(event) {
         this.search_query = event.target.value;
         this.load_calculation_types();
@@ -105,13 +131,50 @@ export class MainPage {
         this.is_loading = false;
 
         if (status === 200 && Array.isArray(data)) {
-            this.calculation_types = data;
+            this.calculation_types = this.get_unique_calculation_types(data);
         } else {
             this.calculation_types = [];
             this.error_message = "Не удалось загрузить список услуг вычислений.";
         }
 
         this.update_calculation_type_list();
+    }
+
+    get_calculation_type_key(calculation_type_data) {
+        if (calculation_type_data.calculation_type === "solve") {
+            return "solve_expression";
+        }
+
+        return calculation_type_data.calculation_type;
+    }
+
+    get_unique_calculation_types(calculation_types) {
+        const unique_calculation_types = new Map();
+
+        calculation_types.forEach((calculation_type_data) => {
+            const key = this.get_calculation_type_key(calculation_type_data);
+
+            if (!unique_calculation_types.has(key)) {
+                unique_calculation_types.set(key, {
+                    ...calculation_type_data,
+                    calculation_type: key,
+                    source_ids: [calculation_type_data.id]
+                });
+                return;
+            }
+
+            const existing_calculation_type = unique_calculation_types.get(key);
+            existing_calculation_type.source_ids.push(calculation_type_data.id);
+        });
+
+        return Array.from(unique_calculation_types.values()).sort((first_item, second_item) => {
+            const first_index = CALCULATION_TYPE_ORDER.indexOf(first_item.calculation_type);
+            const second_index = CALCULATION_TYPE_ORDER.indexOf(second_item.calculation_type);
+            const normalized_first_index = first_index === -1 ? CALCULATION_TYPE_ORDER.length : first_index;
+            const normalized_second_index = second_index === -1 ? CALCULATION_TYPE_ORDER.length : second_index;
+
+            return normalized_first_index - normalized_second_index;
+        });
     }
 
     update_calculation_type_list() {
@@ -127,7 +190,11 @@ export class MainPage {
 
         this.calculation_types.forEach((calculation_type_data) => {
             const calculation_type_card = new CalculationTypeCardComponent(this.calculation_type_list_root);
-            calculation_type_card.render(calculation_type_data, this.click_card.bind(this));
+            calculation_type_card.render(
+                calculation_type_data,
+                this.click_card.bind(this),
+                this.delete_card.bind(this)
+            );
         });
 
         this.counter_root.textContent = `Кол-во услуг: ${this.calculation_types.length}`;
