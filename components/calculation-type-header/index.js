@@ -7,7 +7,7 @@ export class CalculationTypeHeaderComponent {
         this.parent.insertAdjacentHTML(
             "beforeend",
             `
-                <div class="d-flex justify-content-end mb-3">
+                <div class="d-flex justify-content-end mb-4">
                     <button class="btn btn-outline-secondary pm-btn-outline" id="home-button">Домой</button>
                 </div>
             `

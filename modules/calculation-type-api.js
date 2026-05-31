@@ -1,6 +1,21 @@
-async function fetch_json(url) {
+const BASE_URL = "/calculation_type";
+
+function build_url(url, params = {}) {
+    const query = new URLSearchParams();
+
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && String(value).trim() !== "") {
+            query.append(key, value);
+        }
+    });
+
+    const query_string = query.toString();
+    return query_string ? `${url}?${query_string}` : url;
+}
+
+async function fetch_json(url, options = {}) {
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, options);
         const text = await response.text();
 
         return {
@@ -9,6 +24,7 @@ async function fetch_json(url) {
         };
     } catch (error) {
         console.error("Ошибка выполнения запроса:", error);
+
         return {
             data: null,
             status: 0
@@ -16,12 +32,32 @@ async function fetch_json(url) {
     }
 }
 
-const BASE_URL = "/calculation_type";
-
-export async function getCalculationTypes() {
-    return fetch_json(BASE_URL);
+function json_options(method, data) {
+    return {
+        method,
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    };
 }
 
-export async function getCalculationTypeById(id) {
+export async function get_calculation_types(filters = {}) {
+    return fetch_json(build_url(BASE_URL, filters));
+}
+
+export async function get_calculation_type_by_id(id) {
     return fetch_json(`${BASE_URL}/${id}`);
+}
+
+export async function create_calculation_type(data) {
+    return fetch_json(BASE_URL, json_options("POST", data));
+}
+
+export async function update_calculation_type(id, data) {
+    return fetch_json(`${BASE_URL}/${id}`, json_options("PATCH", data));
+}
+
+export async function delete_calculation_type(id) {
+    return fetch_json(`${BASE_URL}/${id}`, { method: "DELETE" });
 }

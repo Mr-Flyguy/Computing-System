@@ -1,12 +1,24 @@
 import { CalculationTypeCardComponent } from "../../components/calculation-type-card/index.js";
+import { ButtonComponent } from "../../components/button/index.js";
 import { CalculationTypePage } from "../calculation-type/index.js";
-import { getCalculationTypes } from "../../modules/calculation-type-api.js";
+import { CalculationTypeFormPage } from "../calculation-type-form/index.js";
+import { delete_calculation_type, get_calculation_types } from "../../modules/calculation-type-api.js";
+
+const CALCULATION_TYPE_ORDER = [
+    "factorial",
+    "gcd",
+    "sum_of_squares",
+    "solve_expression",
+    "sum_unique_elements"
+];
 
 export class MainPage {
     constructor(parent) {
         this.parent = parent;
         this.search_query = "";
         this.calculation_types = [];
+        this.is_loading = false;
+        this.error_message = "";
     }
 
     get calculation_type_list_root() {
@@ -25,21 +37,11 @@ export class MainPage {
         return document.getElementById("calculation-type-counter");
     }
 
-    get_filtered_calculation_types() {
-        const normalized_query = this.search_query.trim().toLowerCase();
-
-        if (!normalized_query) {
-            return this.calculation_types;
-        }
-
-        return this.calculation_types.filter((calculation_type) =>
-            calculation_type.title.toLowerCase().includes(normalized_query)
-        );
+    get add_calculation_type_button_root() {
+        return document.getElementById("new-calculation-type-button");
     }
 
     getHTML() {
-        const filtered_calculation_types = this.get_filtered_calculation_types();
-
         return `
             <div id="main-page" class="app-container">
                 <div class="hero-block">
@@ -67,12 +69,16 @@ export class MainPage {
                         >
                     </div>
 
+                    <div class="calculation-type-actions mt-3 mb-0">
+                        <div id="new-calculation-type-button" class="calculation-type-action-item"></div>
+                    </div>
                 </div>
 
+                <div id="calculation-type-error" class="calculation-type-error d-none"></div>
                 <div id="calculation-type-list" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4"></div>
                 <div
                     id="calculation-type-empty-state"
-                    class="calculation-type-empty${filtered_calculation_types.length ? " d-none" : ""}"
+                    class="calculation-type-empty d-none"
                 >
                     По вашему запросу услуги не найдены.
                 </div>
@@ -80,35 +86,136 @@ export class MainPage {
         `;
     }
 
-    click_card(calculation_type_data) {
-        const calculation_type_page = new CalculationTypePage(this.parent, calculation_type_data.id, calculation_type_data);
+    click_card(event) {
+        const calculation_type_id = Number(event.currentTarget.dataset.id);
+        const calculation_type_page = new CalculationTypePage(this.parent, calculation_type_id);
         calculation_type_page.render();
+    }
+
+    async delete_card(event) {
+        const ids = event.currentTarget.dataset.ids
+            .split(",")
+            .map((id) => Number(id))
+            .filter(Boolean);
+
+        const results = await Promise.all(ids.map((id) => delete_calculation_type(id)));
+        const has_error = results.some(({ status }) => status !== 204);
+
+        if (has_error) {
+            this.error_message = "Не удалось удалить услугу вычислений.";
+            this.update_calculation_type_list();
+            return;
+        }
+
+        await this.load_calculation_types();
     }
 
     handle_search(event) {
         this.search_query = event.target.value;
+        this.load_calculation_types();
+    }
+
+    open_create_page() {
+        const form_page = new CalculationTypeFormPage(this.parent);
+        form_page.render();
+    }
+
+    async load_calculation_types() {
+        this.is_loading = true;
+        this.error_message = "";
+        this.update_calculation_type_list();
+
+        const filters = this.search_query.trim() ? { title: this.search_query.trim() } : {};
+        const { data, status } = await get_calculation_types(filters);
+
+        this.is_loading = false;
+
+        if (status === 200 && Array.isArray(data)) {
+            this.calculation_types = this.get_unique_calculation_types(data);
+        } else {
+            this.calculation_types = [];
+            this.error_message = "Не удалось загрузить список услуг вычислений.";
+        }
+
         this.update_calculation_type_list();
     }
 
+    get_calculation_type_key(calculation_type_data) {
+        if (calculation_type_data.calculation_type === "solve") {
+            return "solve_expression";
+        }
+
+        return calculation_type_data.calculation_type;
+    }
+
+    get_unique_calculation_types(calculation_types) {
+        const unique_calculation_types = new Map();
+
+        calculation_types.forEach((calculation_type_data) => {
+            const key = this.get_calculation_type_key(calculation_type_data);
+
+            if (!unique_calculation_types.has(key)) {
+                unique_calculation_types.set(key, {
+                    ...calculation_type_data,
+                    calculation_type: key,
+                    source_ids: [calculation_type_data.id]
+                });
+                return;
+            }
+
+            const existing_calculation_type = unique_calculation_types.get(key);
+            existing_calculation_type.source_ids.push(calculation_type_data.id);
+        });
+
+        return Array.from(unique_calculation_types.values()).sort((first_item, second_item) => {
+            const first_index = CALCULATION_TYPE_ORDER.indexOf(first_item.calculation_type);
+            const second_index = CALCULATION_TYPE_ORDER.indexOf(second_item.calculation_type);
+            const normalized_first_index = first_index === -1 ? CALCULATION_TYPE_ORDER.length : first_index;
+            const normalized_second_index = second_index === -1 ? CALCULATION_TYPE_ORDER.length : second_index;
+
+            return normalized_first_index - normalized_second_index;
+        });
+    }
+
     update_calculation_type_list() {
-        const filtered_calculation_types = this.get_filtered_calculation_types();
+        const error_root = document.getElementById("calculation-type-error");
         this.calculation_type_list_root.innerHTML = "";
 
-        filtered_calculation_types.forEach((calculation_type_data) => {
+        if (this.is_loading) {
+            this.calculation_type_list_root.insertAdjacentHTML(
+                "beforeend",
+                `<div class="col-12"><div class="calculation-type-empty">Загрузка...</div></div>`
+            );
+        }
+
+        this.calculation_types.forEach((calculation_type_data) => {
             const calculation_type_card = new CalculationTypeCardComponent(this.calculation_type_list_root);
-            calculation_type_card.render(calculation_type_data, this.click_card.bind(this));
+            calculation_type_card.render(
+                calculation_type_data,
+                this.click_card.bind(this),
+                this.delete_card.bind(this)
+            );
         });
 
         this.counter_root.textContent = `Кол-во услуг: ${this.calculation_types.length}`;
-        this.empty_state_root.classList.toggle("d-none", filtered_calculation_types.length > 0);
+        this.empty_state_root.classList.toggle("d-none", this.is_loading || this.calculation_types.length > 0);
+        error_root.textContent = this.error_message;
+        error_root.classList.toggle("d-none", !this.error_message);
     }
 
     async render() {
         this.parent.innerHTML = "";
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
         this.search_input.addEventListener("input", this.handle_search.bind(this));
-        const { data, status } = await getCalculationTypes();
-        this.calculation_types = status === 200 && Array.isArray(data) ? data : [];
-        this.update_calculation_type_list();
+
+        const add_calculation_type_button = new ButtonComponent(this.add_calculation_type_button_root);
+        add_calculation_type_button.render(
+            "Новая услуга",
+            "new-calculation-type-action",
+            this.open_create_page.bind(this),
+            "btn btn-danger pm-btn"
+        );
+
+        await this.load_calculation_types();
     }
 }
