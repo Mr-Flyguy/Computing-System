@@ -95,7 +95,7 @@ export class CalculationTypeCardComponent {
 
         const open_button = new ButtonComponent(open_button_root);
         open_button.render(
-            "Открыть услугу",
+            "Подробнее",
             `calculation-type-open-${calculation_type_data.id}`,
             open_listener,
             "btn btn-danger pm-btn w-100"
