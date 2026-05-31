@@ -1,39 +1,39 @@
-import { initial_services } from "../data/services.js";
+import { initial_calculation_types } from "../data/services.js";
 
-const services = initial_services.map((service) => ({ ...service }));
+const calculation_types = initial_calculation_types.map((calculation_type) => ({ ...calculation_type }));
 
-export function get_services() {
-    return services.map((service) => ({ ...service }));
+export function get_calculation_types() {
+    return calculation_types.map((calculation_type) => ({ ...calculation_type }));
 }
 
-export function get_service_by_id(id) {
-    return services.find((service) => service.id === id);
+export function get_calculation_type_by_id(id) {
+    return calculation_types.find((calculation_type) => calculation_type.id === id);
 }
 
-export function create_service_copy_from_first() {
-    if (services.length === 0) {
+export function create_calculation_type_copy_from_first() {
+    if (calculation_types.length === 0) {
         return null;
     }
 
-    const first_service = services[0];
-    const new_id = Math.max(...services.map((service) => service.id)) + 1;
-    const service_copy = {
-        ...first_service,
+    const first_calculation_type = calculation_types[0];
+    const new_id = Math.max(...calculation_types.map((calculation_type) => calculation_type.id)) + 1;
+    const calculation_type_copy = {
+        ...first_calculation_type,
         id: new_id
     };
 
-    services.push(service_copy);
+    calculation_types.push(calculation_type_copy);
 
-    return { ...service_copy };
+    return { ...calculation_type_copy };
 }
 
-export function remove_service_by_id(id) {
-    const service_index = services.findIndex((service) => service.id === id);
+export function remove_calculation_type_by_id(id) {
+    const calculation_type_index = calculation_types.findIndex((calculation_type) => calculation_type.id === id);
 
-    if (service_index === -1) {
+    if (calculation_type_index === -1) {
         return false;
     }
 
-    services.splice(service_index, 1);
+    calculation_types.splice(calculation_type_index, 1);
     return true;
 }
