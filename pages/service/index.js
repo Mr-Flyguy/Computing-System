@@ -1,12 +1,13 @@
 import { ServiceDetailsComponent } from "../../components/service-details/index.js";
 import { ServiceHeaderComponent } from "../../components/service-header/index.js";
 import { MainPage } from "../main/index.js";
-import { get_service_by_id } from "../../utils/service-storage.js";
+import { getCalculationTypeById } from "../../modules/calculation-type-api.js";
 
 export class ServicePage {
-    constructor(parent, id) {
+    constructor(parent, id, service_data = null) {
         this.parent = parent;
         this.id = Number(id);
+        this.service_data = service_data;
     }
 
     get page_root() {
@@ -24,14 +25,14 @@ export class ServicePage {
         main_page.render();
     }
 
-    render() {
+    async render() {
         this.parent.innerHTML = "";
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
 
         const service_header = new ServiceHeaderComponent(this.page_root);
-        service_header.render("Лабораторная работа", this.click_home.bind(this));
+        service_header.render(this.click_home.bind(this));
 
-        const service = get_service_by_id(this.id);
+        const service = this.service_data || await this.load_service();
 
         if (!service) {
             this.page_root.insertAdjacentHTML(
@@ -48,5 +49,15 @@ export class ServicePage {
 
         const service_details_component = new ServiceDetailsComponent(this.page_root);
         service_details_component.render(service);
+    }
+
+    async load_service() {
+        const { data, status } = await getCalculationTypeById(this.id);
+
+        if (status !== 200) {
+            return null;
+        }
+
+        return data;
     }
 }
