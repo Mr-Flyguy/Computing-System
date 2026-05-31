@@ -7,8 +7,14 @@ function validate_request_payload(payload, is_partial = false) {
         return "Не все обязательные поля заполнены";
     }
 
-    if (calculation_type === "sum_of_squares" && numbers !== undefined && typeof numbers !== "string") {
-        return "Для sum_of_squares поле numbers должно быть строкой с числами через запятую";
+    // For sum_unique_elements accept either a string or an array (arrays may be nested; service will normalize)
+    if (
+        calculation_type === "sum_unique_elements" &&
+        numbers !== undefined &&
+        typeof numbers !== "string" &&
+        !Array.isArray(numbers)
+    ) {
+        return "Для sum_unique_elements поле numbers должно быть строкой или массивом чисел";
     }
 
     return null;

@@ -11,8 +11,18 @@ function normalize_calculation_type(calculation_type) {
         ...calculation_type
     };
 
-    if (normalized_calculation_type.calculation_type === "sum_of_squares" && Array.isArray(normalized_calculation_type.numbers)) {
-        normalized_calculation_type.numbers = normalized_calculation_type.numbers.join(", ");
+    // For numeric-array calculation types, ensure `numbers` is a flat array (no nested arrays)
+    if (
+        normalized_calculation_type.calculation_type === "sum_unique_elements" &&
+        Array.isArray(normalized_calculation_type.numbers)
+    ) {
+        // flatten one level (defensive, atomic change)
+        const flattened = normalized_calculation_type.numbers.reduce((acc, cur) => {
+            if (Array.isArray(cur)) return acc.concat(cur);
+            return acc.concat(cur);
+        }, []);
+
+        normalized_calculation_type.numbers = flattened;
     }
 
     return normalized_calculation_type;
