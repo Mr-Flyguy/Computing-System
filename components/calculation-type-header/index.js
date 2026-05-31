@@ -3,16 +3,23 @@ export class CalculationTypeHeaderComponent {
         this.parent = parent;
     }
 
-    render(listener) {
+    render(listener, is_current_page = false) {
         this.parent.insertAdjacentHTML(
-            "beforeend",
+            "afterbegin",
             `
-                <div class="d-flex justify-content-end mb-4">
-                    <button class="btn btn-outline-secondary pm-btn-outline" id="home-button">Домой</button>
-                </div>
+                <header class="calculation-type-header">
+                    <button
+                        class="calculation-type-home-button"
+                        id="calculation-type-home-button"
+                        type="button"
+                        ${is_current_page ? 'aria-current="page"' : ""}
+                    >
+                        Услуги вычислений
+                    </button>
+                </header>
             `
         );
 
-        document.getElementById("home-button").addEventListener("click", listener);
+        document.getElementById("calculation-type-home-button").addEventListener("click", listener);
     }
 }
