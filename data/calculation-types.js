@@ -1,4 +1,4 @@
-export const initial_services = [
+export const initial_calculation_types = [
     {
         id: 1,
         title: "Факториал",

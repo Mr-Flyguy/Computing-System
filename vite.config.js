@@ -3,7 +3,7 @@ export default {
     publicDir: false,
     server: {
         proxy: {
-            "/requests": {
+            "/calculation_type": {
                 target: "http://localhost:3000",
                 changeOrigin: true,
             },

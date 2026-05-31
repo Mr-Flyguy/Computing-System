@@ -1,11 +1,11 @@
-import { ServiceCardComponent } from "../../components/service-card/index.js";
+import { CalculationTypeCardComponent } from "../../components/calculation-type-card/index.js";
 import { ButtonComponent } from "../../components/button/index.js";
-import { ServicePage } from "../service/index.js";
+import { CalculationTypePage } from "../calculation-type/index.js";
 import {
-    create_service_copy_from_first,
-    get_services,
-    remove_service_by_id
-} from "../../utils/service-storage.js";
+    create_calculation_type_copy_from_first,
+    get_calculation_types,
+    remove_calculation_type_by_id
+} from "../../utils/calculation-type-storage.js";
 
 export class MainPage {
     constructor(parent) {
@@ -13,42 +13,42 @@ export class MainPage {
         this.search_query = "";
     }
 
-    get request_list_root() {
-        return document.getElementById("request-list");
+    get calculation_type_list_root() {
+        return document.getElementById("calculation-type-list");
     }
 
     get search_input() {
-        return document.getElementById("service-search-input");
+        return document.getElementById("calculation-type-search-input");
     }
 
     get empty_state_root() {
-        return document.getElementById("service-search-empty");
+        return document.getElementById("calculation-type-search-empty");
     }
 
     get counter_root() {
-        return document.getElementById("service-counter");
+        return document.getElementById("calculation-type-counter");
     }
 
-    get add_service_button_root() {
-        return document.getElementById("add-service-button");
+    get add_calculation_type_button_root() {
+        return document.getElementById("add-calculation-type-button");
     }
 
-    get_filtered_services() {
-        const services = get_services();
+    get_filtered_calculation_types() {
+        const calculation_types = get_calculation_types();
         const normalized_query = this.search_query.trim().toLowerCase();
 
         if (!normalized_query) {
-            return services;
+            return calculation_types;
         }
 
-        return services.filter((service) =>
-            service.title.toLowerCase().includes(normalized_query)
+        return calculation_types.filter((calculation_type) =>
+            calculation_type.title.toLowerCase().includes(normalized_query)
         );
     }
 
     getHTML() {
-        const services = get_services();
-        const filtered_services = this.get_filtered_services();
+        const calculation_types = get_calculation_types();
+        const filtered_calculation_types = this.get_filtered_calculation_types();
 
         return `
             <div id="main-page" class="app-container">
@@ -61,16 +61,16 @@ export class MainPage {
                             </p>
                         </div>
 
-                        <div class="request-counter">
-                            <span id="service-counter">Кол-во услуг: ${services.length}</span>
+                        <div class="calculation-type-counter-badge">
+                            <span id="calculation-type-counter">Кол-во услуг: ${calculation_types.length}</span>
                         </div>
                     </div>
 
-                    <div class="service-search-block">
-                        <label class="service-search-label" for="service-search-input">Поиск по названию</label>
+                    <div class="calculation-type-search-block">
+                        <label class="calculation-type-search-label" for="calculation-type-search-input">Поиск по названию</label>
                         <input
-                            id="service-search-input"
-                            class="form-control service-search-input"
+                            id="calculation-type-search-input"
+                            class="form-control calculation-type-search-input"
                             type="text"
                             placeholder="Например, сумма или факториал"
                             value="${this.search_query}"
@@ -78,14 +78,14 @@ export class MainPage {
                     </div>
 
                     <div class="mt-3">
-                        <div id="add-service-button" class="d-inline-flex"></div>
+                        <div id="add-calculation-type-button" class="d-inline-flex"></div>
                     </div>
                 </div>
 
-                <div id="request-list" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4"></div>
+                <div id="calculation-type-list" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4"></div>
                 <div
-                    id="service-search-empty"
-                    class="request-history-empty${filtered_services.length ? " d-none" : ""}"
+                    id="calculation-type-search-empty"
+                    class="calculation-type-empty${filtered_calculation_types.length ? " d-none" : ""}"
                 >
                     По вашему запросу услуги не найдены.
                 </div>
@@ -94,43 +94,43 @@ export class MainPage {
     }
 
     click_card(event) {
-        const service_id = Number(event.target.dataset.id);
-        const service_page = new ServicePage(this.parent, service_id);
-        service_page.render();
+        const calculation_type_id = Number(event.target.dataset.id);
+        const calculation_type_page = new CalculationTypePage(this.parent, calculation_type_id);
+        calculation_type_page.render();
     }
 
     handle_search(event) {
         this.search_query = event.target.value;
-        this.update_service_list();
+        this.update_calculation_type_list();
     }
 
-    add_service() {
-        create_service_copy_from_first();
-        this.update_service_list();
+    add_calculation_type() {
+        create_calculation_type_copy_from_first();
+        this.update_calculation_type_list();
     }
 
-    delete_service(event) {
-        const service_id = Number(event.target.dataset.id);
-        remove_service_by_id(service_id);
-        this.update_service_list();
+    delete_calculation_type(event) {
+        const calculation_type_id = Number(event.target.dataset.id);
+        remove_calculation_type_by_id(calculation_type_id);
+        this.update_calculation_type_list();
     }
 
-    update_service_list() {
-        const services = get_services();
-        const filtered_services = this.get_filtered_services();
-        this.request_list_root.innerHTML = "";
+    update_calculation_type_list() {
+        const calculation_types = get_calculation_types();
+        const filtered_calculation_types = this.get_filtered_calculation_types();
+        this.calculation_type_list_root.innerHTML = "";
 
-        filtered_services.forEach((service_data) => {
-            const service_card = new ServiceCardComponent(this.request_list_root);
-            service_card.render(
-                service_data,
+        filtered_calculation_types.forEach((calculation_type_data) => {
+            const calculation_type_card = new CalculationTypeCardComponent(this.calculation_type_list_root);
+            calculation_type_card.render(
+                calculation_type_data,
                 this.click_card.bind(this),
-                this.delete_service.bind(this)
+                this.delete_calculation_type.bind(this)
             );
         });
 
-        this.counter_root.textContent = `Кол-во услуг: ${services.length}`;
-        this.empty_state_root.classList.toggle("d-none", filtered_services.length > 0);
+        this.counter_root.textContent = `Кол-во услуг: ${calculation_types.length}`;
+        this.empty_state_root.classList.toggle("d-none", filtered_calculation_types.length > 0);
     }
 
     render() {
@@ -138,14 +138,14 @@ export class MainPage {
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
         this.search_input.addEventListener("input", this.handle_search.bind(this));
 
-        const add_service_button = new ButtonComponent(this.add_service_button_root);
-        add_service_button.render(
+        const add_calculation_type_button = new ButtonComponent(this.add_calculation_type_button_root);
+        add_calculation_type_button.render(
             "Добавить услугу",
-            "add-service-action",
-            this.add_service.bind(this),
+            "add-calculation-type-action",
+            this.add_calculation_type.bind(this),
             "btn btn-danger pm-btn"
         );
 
-        this.update_service_list();
+        this.update_calculation_type_list();
     }
 }

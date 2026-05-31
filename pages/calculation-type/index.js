@@ -1,21 +1,21 @@
-import { ServiceDetailsComponent } from "../../components/service-details/index.js";
-import { ServiceHeaderComponent } from "../../components/service-header/index.js";
+import { CalculationTypeDetailsComponent } from "../../components/calculation-type-details/index.js";
+import { CalculationTypeHeaderComponent } from "../../components/calculation-type-header/index.js";
 import { MainPage } from "../main/index.js";
-import { get_service_by_id } from "../../utils/service-storage.js";
+import { get_calculation_type_by_id } from "../../utils/calculation-type-storage.js";
 
-export class ServicePage {
+export class CalculationTypePage {
     constructor(parent, id) {
         this.parent = parent;
         this.id = Number(id);
     }
 
     get page_root() {
-        return document.getElementById("service-page");
+        return document.getElementById("calculation-type-page");
     }
 
     getHTML() {
         return `
-            <div id="service-page" class="app-container"></div>
+            <div id="calculation-type-page" class="app-container"></div>
         `;
     }
 
@@ -33,16 +33,16 @@ export class ServicePage {
         this.parent.innerHTML = "";
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
 
-        const service_header = new ServiceHeaderComponent(this.page_root);
-        service_header.render(this.click_home.bind(this));
+        const calculation_type_header = new CalculationTypeHeaderComponent(this.page_root);
+        calculation_type_header.render(this.click_home.bind(this));
 
-        const service = get_service_by_id(this.id);
+        const calculation_type = get_calculation_type_by_id(this.id);
 
-        if (!service) {
+        if (!calculation_type) {
             this.page_root.insertAdjacentHTML(
                 "beforeend",
                 `
-                    <div class="service-page-card">
+                    <div class="calculation-type-page-card">
                         <h2 class="mb-2">Услуга не найдена</h2>
                         <p class="text-muted mb-0">Выберите услугу из каталога на главной странице.</p>
                     </div>
@@ -51,7 +51,7 @@ export class ServicePage {
             return;
         }
 
-        const service_details_component = new ServiceDetailsComponent(this.page_root);
-        service_details_component.render(service);
+        const calculation_type_details_component = new CalculationTypeDetailsComponent(this.page_root);
+        calculation_type_details_component.render(calculation_type);
     }
 }
