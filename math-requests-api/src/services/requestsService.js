@@ -1,106 +1,106 @@
-const file_service = require("./fileService");
+const file_store = require("./fileService");
 
 let data_file_path;
 
-function normalize_request(request) {
-    if (!request) {
-        return request;
+function normalize_calculation_type(calculation_type) {
+    if (!calculation_type) {
+        return calculation_type;
     }
 
-    const normalized_request = {
-        ...request
+    const normalized_calculation_type = {
+        ...calculation_type
     };
 
-    if (normalized_request.type === "sum_of_squares" && Array.isArray(normalized_request.numbers)) {
-        normalized_request.numbers = normalized_request.numbers.join(", ");
+    if (normalized_calculation_type.calculation_type === "sum_of_squares" && Array.isArray(normalized_calculation_type.numbers)) {
+        normalized_calculation_type.numbers = normalized_calculation_type.numbers.join(", ");
     }
 
-    return normalized_request;
+    return normalized_calculation_type;
 }
 
-function read_requests() {
-    return file_service.read_data(data_file_path).map(normalize_request);
+function read_calculation_types() {
+    return file_store.read_data(data_file_path).map(normalize_calculation_type);
 }
 
 function init(file_path) {
     data_file_path = file_path;
-    read_requests();
+    read_calculation_types();
 }
 
 function find_all(filters) {
-    let requests = read_requests();
+    let calculation_types = read_calculation_types();
 
     if (filters.title) {
-        requests = requests.filter((request) =>
-            request.title.toLowerCase().includes(filters.title.toLowerCase())
+        calculation_types = calculation_types.filter((calculation_type) =>
+            calculation_type.title.toLowerCase().includes(filters.title.toLowerCase())
         );
     }
 
     if (filters.status) {
-        requests = requests.filter(
-            (request) => request.status.toLowerCase() === filters.status.toLowerCase()
+        calculation_types = calculation_types.filter(
+            (calculation_type) => calculation_type.status.toLowerCase() === filters.status.toLowerCase()
         );
     }
 
-    if (filters.type) {
-        requests = requests.filter(
-            (request) => request.type.toLowerCase() === filters.type.toLowerCase()
+    if (filters.calculation_type) {
+        calculation_types = calculation_types.filter(
+            (calculation_type) => calculation_type.calculation_type.toLowerCase() === filters.calculation_type.toLowerCase()
         );
     }
 
-    return requests;
+    return calculation_types;
 }
 
 function find_one(id) {
-    const requests = read_requests();
-    return requests.find((request) => request.id === id);
+    const calculation_types = read_calculation_types();
+    return calculation_types.find((calculation_type) => calculation_type.id === id);
 }
 
-function create(request_data) {
-    const requests = read_requests();
+function create(calculation_type_data) {
+    const calculation_types = read_calculation_types();
 
     const new_id =
-        requests.length > 0
-            ? Math.max(...requests.map((request) => request.id)) + 1
+        calculation_types.length > 0
+            ? Math.max(...calculation_types.map((calculation_type) => calculation_type.id)) + 1
             : 1;
 
-    const new_request = {
+    const new_calculation_type = {
         id: new_id,
-        ...normalize_request(request_data)
+        ...normalize_calculation_type(calculation_type_data)
     };
 
-    requests.push(new_request);
-    file_service.write_data(data_file_path, requests);
+    calculation_types.push(new_calculation_type);
+    file_store.write_data(data_file_path, calculation_types);
 
-    return new_request;
+    return new_calculation_type;
 }
 
-function update(id, request_data) {
-    const requests = read_requests();
-    const index = requests.findIndex((request) => request.id === id);
+function update(id, calculation_type_data) {
+    const calculation_types = read_calculation_types();
+    const index = calculation_types.findIndex((calculation_type) => calculation_type.id === id);
 
     if (index === -1) {
         return null;
     }
 
-    requests[index] = normalize_request({
-        ...requests[index],
-        ...request_data
+    calculation_types[index] = normalize_calculation_type({
+        ...calculation_types[index],
+        ...calculation_type_data
     });
 
-    file_service.write_data(data_file_path, requests);
-    return requests[index];
+    file_store.write_data(data_file_path, calculation_types);
+    return calculation_types[index];
 }
 
 function remove(id) {
-    const requests = read_requests();
-    const filtered_requests = requests.filter((request) => request.id !== id);
+    const calculation_types = read_calculation_types();
+    const filtered_calculation_types = calculation_types.filter((calculation_type) => calculation_type.id !== id);
 
-    if (filtered_requests.length === requests.length) {
+    if (filtered_calculation_types.length === calculation_types.length) {
         return false;
     }
 
-    file_service.write_data(data_file_path, filtered_requests);
+    file_store.write_data(data_file_path, filtered_calculation_types);
     return true;
 }
 

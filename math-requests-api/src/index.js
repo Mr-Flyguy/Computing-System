@@ -1,8 +1,8 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const requests_router = require("./routes/requests");
-const requests_service = require("./services/requestsService");
+const calculation_type_router = require("./routes/requests");
+const calculation_type_store = require("./services/requestsService");
 
 const app = express();
 const PORT = 3000;
@@ -12,7 +12,7 @@ const frontend_public_path = path.resolve(__dirname, "../../public");
 const frontend_index_path = path.join(frontend_public_path, "index.html");
 const has_frontend_build = fs.existsSync(frontend_index_path);
 
-requests_service.init(data_file_path);
+calculation_type_store.init(data_file_path);
 
 app.use(express.json());
 
@@ -25,14 +25,14 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use("/requests", requests_router);
+app.use("/calculation_type", calculation_type_router);
 
 app.get("/", (req, res) => {
     if (has_frontend_build) {
         return res.sendFile(frontend_index_path);
     }
 
-    return res.send("API для заявок на вычисления работает");
+    return res.send("API для услуг вычислений работает");
 });
 
 app.listen(PORT, () => {
