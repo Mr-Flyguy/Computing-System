@@ -1,13 +1,12 @@
-const calculation_type_store = require("../models/calculationTypeStore");
+const calculation_type_store = require("../models/calculation_type_store");
 
-function validate_calculation_type_payload(payload, is_partial = false) {
+function validate_calculation_type_payload(payload = {}, is_partial = false) {
     const { title, description, calculation_type, status, numbers } = payload;
 
     if (!is_partial && (!title || !description || !calculation_type || !status)) {
         return "Не все обязательные поля заполнены";
     }
 
-    // For sum_unique_elements accept either a string or an array (arrays may be nested; store will normalize)
     if (
         calculation_type === "sum_unique_elements" &&
         numbers !== undefined &&
@@ -27,7 +26,7 @@ function get_all_calculation_types(req, res) {
 }
 
 function get_calculation_type_by_id(req, res) {
-    const id = parseInt(req.params.id);
+    const id = Number.parseInt(req.params.id, 10);
     const calculation_type = calculation_type_store.find_one(id);
 
     if (!calculation_type) {
@@ -49,7 +48,7 @@ function create_calculation_type(req, res) {
 }
 
 function update_calculation_type(req, res) {
-    const id = parseInt(req.params.id);
+    const id = Number.parseInt(req.params.id, 10);
     const validation_error = validate_calculation_type_payload(req.body, true);
 
     if (validation_error) {
@@ -66,7 +65,7 @@ function update_calculation_type(req, res) {
 }
 
 function delete_calculation_type(req, res) {
-    const id = parseInt(req.params.id);
+    const id = Number.parseInt(req.params.id, 10);
     const success = calculation_type_store.remove(id);
 
     if (!success) {

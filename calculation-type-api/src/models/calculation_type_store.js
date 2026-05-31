@@ -1,4 +1,4 @@
-const file_store = require("./fileStore");
+const file_store = require("./file_store");
 
 let data_file_path;
 
@@ -11,12 +11,10 @@ function normalize_calculation_type(calculation_type) {
         ...calculation_type
     };
 
-    // For numeric-array calculation types, ensure `numbers` is a flat array (no nested arrays)
     if (
         normalized_calculation_type.calculation_type === "sum_unique_elements" &&
         Array.isArray(normalized_calculation_type.numbers)
     ) {
-        // flatten one level (defensive, atomic change)
         const flattened = normalized_calculation_type.numbers.reduce((acc, cur) => {
             if (Array.isArray(cur)) return acc.concat(cur);
             return acc.concat(cur);
@@ -68,6 +66,7 @@ function find_one(id) {
 
 function create(calculation_type_data) {
     const calculation_types = read_calculation_types();
+    const normalized_calculation_type = normalize_calculation_type(calculation_type_data);
 
     const new_id =
         calculation_types.length > 0
@@ -75,8 +74,8 @@ function create(calculation_type_data) {
             : 1;
 
     const new_calculation_type = {
-        id: new_id,
-        ...normalize_calculation_type(calculation_type_data)
+        ...normalized_calculation_type,
+        id: new_id
     };
 
     calculation_types.push(new_calculation_type);
@@ -95,7 +94,8 @@ function update(id, calculation_type_data) {
 
     calculation_types[index] = normalize_calculation_type({
         ...calculation_types[index],
-        ...calculation_type_data
+        ...calculation_type_data,
+        id
     });
 
     file_store.write_data(data_file_path, calculation_types);
