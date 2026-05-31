@@ -1,4 +1,4 @@
-import { isPalindrome, sumOfUniqueElements } from "../../utils/text-and-array-calculations.js";
+import { sumOfUniqueElements } from "../../utils/text-and-array-calculations.js";
 
 export class CalculationTypeDetailsComponent {
     constructor(parent) {
@@ -11,7 +11,6 @@ export class CalculationTypeDetailsComponent {
             gcd: "НОД",
             sum_of_squares: "Сумма квадратов",
             solve_expression: "Вычисление выражения",
-            palindrome: "Палиндромы",
             sum_unique_elements: "Сумма уникальных элементов"
         };
 
@@ -19,17 +18,10 @@ export class CalculationTypeDetailsComponent {
     }
 
     get_homework_algorithms_html() {
-        const palindrome_example = "А роза упала на лапу Азора";
         const unique_numbers_example = "1, 2, 2, 3, 4, 4";
 
         return `
             <div class="calculation-type-detail-grid mt-3">
-                <div class="calculation-type-detail-item">
-                    <div class="calculation-type-detail-label">Алгоритм</div>
-                    <div class="calculation-type-detail-value">
-                        Палиндромы: "${palindrome_example}" - ${isPalindrome(palindrome_example) ? "да" : "нет"}
-                    </div>
-                </div>
                 <div class="calculation-type-detail-item">
                     <div class="calculation-type-detail-label">Алгоритм</div>
                     <div class="calculation-type-detail-value">

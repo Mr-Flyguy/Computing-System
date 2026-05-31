@@ -7,10 +7,6 @@ export function isPalindrome(value) {
     return normalized === reversed;
 }
 
-export function isPalindrom(value) {
-    return isPalindrome(value);
-}
-
 export function sumOfUniqueElements(numbers_value) {
     const values = Array.isArray(numbers_value)
         ? numbers_value.map((item) => Number(item))

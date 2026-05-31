@@ -13,7 +13,6 @@ export class CalculationTypeCardComponent {
             gcd: "Целые числа",
             sum_of_squares: "Массивы",
             solve_expression: "Алгебра",
-            palindrome: "Строки",
             sum_unique_elements: "Массивы"
         };
 
@@ -33,10 +32,6 @@ export class CalculationTypeCardComponent {
 
         if (type === "sum_of_squares") {
             return `[1,2,3] → ${sumOfSquares("1,2,3")}`;
-        }
-
-        if (type === "palindrome") {
-            return `топот → ${isPalindrome("топот") ? "да" : "нет"}`;
         }
 
         if (type === "sum_unique_elements") {
@@ -70,7 +65,7 @@ export class CalculationTypeCardComponent {
 
                         <h5 class="calculation-type-title">${calculation_type_data.title}</h5>
                         <p class="calculation-type-text">${calculation_type_data.description}</p>
-                        <p class="calculation-type-text mb-1">Название-палиндром: ${palindromeStatus}</p>
+                        <p class="calculation-type-text mb-1">Название палиндром: ${palindromeStatus}</p>
                         ${example ? `<p class="calculation-type-example-label mb-0">Пример:</p><p class="calculation-type-example text-muted mb-2">${example}</p>` : ``}
 
                         <div class="mt-auto">

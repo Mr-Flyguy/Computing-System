@@ -29,13 +29,6 @@ export const initial_calculation_types = [
     },
     {
         id: 5,
-        title: "Палиндромы",
-        description: "Проверка, читается ли строка одинаково слева направо и справа налево.",
-        calculation_type: "palindrome",
-        image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80"
-    },
-    {
-        id: 6,
         title: "Сумма уникальных элементов",
         description: "Подсчёт суммы чисел, которые встречаются в массиве только один раз.",
         calculation_type: "sum_unique_elements",
