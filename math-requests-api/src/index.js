@@ -1,8 +1,8 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
-const calculation_type_router = require("./routes/requests");
-const calculation_type_store = require("./services/requestsService");
+const calculation_type_router = require("./routes/calculation_type");
+const calculation_type_store = require("./services/calculationTypeService");
 
 const app = express();
 const PORT = 3000;

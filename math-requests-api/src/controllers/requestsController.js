@@ -1,4 +1,4 @@
-const calculation_type_store = require("../services/requestsService");
+const calculation_type_store = require("../services/calculationTypeService");
 
 function validate_request_payload(payload, is_partial = false) {
     const { title, description, calculation_type, status, numbers } = payload;
