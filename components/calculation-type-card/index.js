@@ -1,6 +1,6 @@
 import { ButtonComponent } from "../button/index.js";
-import { factorial, gcd, solveExpression } from "../../utils/calculations.js";
-import { isPalindrom, sumOfUniqueElements } from "../../utils/text-and-array-calculations.js";
+import { factorial, gcd, solveExpression, sumOfSquares } from "../../utils/calculations.js";
+import { isPalindrome, sumOfUniqueElements } from "../../utils/text-and-array-calculations.js";
 
 export class CalculationTypeCardComponent {
     constructor(parent) {
@@ -8,19 +8,16 @@ export class CalculationTypeCardComponent {
     }
 
     get_type_label(calculation_type_data) {
-        if (calculation_type_data.calculation_type === "factorial") {
-            return "Комбинаторика";
-        }
+        const labels = {
+            factorial: "Комбинаторика",
+            gcd: "Целые числа",
+            sum_of_squares: "Массивы",
+            solve_expression: "Алгебра",
+            palindrome: "Строки",
+            sum_unique_elements: "Массивы"
+        };
 
-        if (calculation_type_data.calculation_type === "gcd") {
-            return "Целые числа";
-        }
-
-        if (calculation_type_data.calculation_type === "solve_expression") {
-            return "Алгебра";
-        }
-
-        return "Массивы";
+        return labels[calculation_type_data.calculation_type] || "Вычисления";
     }
 
     getExampleText(calculation_type_data) {
@@ -32,6 +29,14 @@ export class CalculationTypeCardComponent {
 
         if (type === "gcd") {
             return `НОД(24, 18) = ${gcd(24, 18)}`;
+        }
+
+        if (type === "sum_of_squares") {
+            return `[1,2,3] → ${sumOfSquares("1,2,3")}`;
+        }
+
+        if (type === "palindrome") {
+            return `топот → ${isPalindrome("топот") ? "да" : "нет"}`;
         }
 
         if (type === "sum_unique_elements") {
@@ -47,7 +52,7 @@ export class CalculationTypeCardComponent {
 
     getHTML(calculation_type_data) {
         const example = this.getExampleText(calculation_type_data);
-        const palindromeStatus = isPalindrom(calculation_type_data.title) ? "да" : "нет";
+        const palindromeStatus = isPalindrome(calculation_type_data.title) ? "да" : "нет";
 
         return `
             <div class="col">

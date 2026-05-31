@@ -1,4 +1,4 @@
-import { factorial, gcd } from "../../utils/calculations.js";
+import { isPalindrome, sumOfUniqueElements } from "../../utils/text-and-array-calculations.js";
 
 export class CalculationTypeDetailsComponent {
     constructor(parent) {
@@ -6,31 +6,35 @@ export class CalculationTypeDetailsComponent {
     }
 
     get_type_label(calculation_type) {
-        if (calculation_type === "factorial") {
-            return "Факториал";
-        }
+        const labels = {
+            factorial: "Факториал",
+            gcd: "НОД",
+            sum_of_squares: "Сумма квадратов",
+            solve_expression: "Вычисление выражения",
+            palindrome: "Палиндромы",
+            sum_unique_elements: "Сумма уникальных элементов"
+        };
 
-        if (calculation_type === "gcd") {
-            return "НОД";
-        }
-
-        if (calculation_type === "solve_expression") {
-            return "Вычисление выражения";
-        }
-
-        return "Сумма квадратов";
+        return labels[calculation_type] || "Услуга вычислений";
     }
 
     get_homework_algorithms_html() {
+        const palindrome_example = "А роза упала на лапу Азора";
+        const unique_numbers_example = "1, 2, 2, 3, 4, 4";
+
         return `
             <div class="calculation-type-detail-grid mt-3">
                 <div class="calculation-type-detail-item">
                     <div class="calculation-type-detail-label">Алгоритм</div>
-                    <div class="calculation-type-detail-value">Факториал: 5! = ${factorial(5)}</div>
+                    <div class="calculation-type-detail-value">
+                        Палиндромы: "${palindrome_example}" - ${isPalindrome(palindrome_example) ? "да" : "нет"}
+                    </div>
                 </div>
                 <div class="calculation-type-detail-item">
                     <div class="calculation-type-detail-label">Алгоритм</div>
-                    <div class="calculation-type-detail-value">НОД: gcd(24, 18) = ${gcd(24, 18)}</div>
+                    <div class="calculation-type-detail-value">
+                        Сумма уникальных элементов: [${unique_numbers_example}] = ${sumOfUniqueElements(unique_numbers_example)}
+                    </div>
                 </div>
             </div>
         `;

@@ -1,10 +1,14 @@
-export function isPalindrom(value) {
+export function isPalindrome(value) {
     const normalized = String(value)
         .toLowerCase()
         .replace(/[^a-zа-я0-9]/gi, "");
 
     const reversed = normalized.split("").reverse().join("");
     return normalized === reversed;
+}
+
+export function isPalindrom(value) {
+    return isPalindrome(value);
 }
 
 export function sumOfUniqueElements(numbers_value) {
