@@ -1,9 +1,13 @@
 class Ajax {
     get(url, params = {}) {
-        const full_url = this._build_url(url, params);
+        const full_url = this._build_url(url, {
+            ...params,
+            cache_buster: Date.now()
+        });
 
         return this._send(full_url, {
-            method: "GET"
+            method: "GET",
+            headers: this._get_no_cache_headers()
         });
     }
 
@@ -44,6 +48,13 @@ class Ajax {
 
         const query_string = query.toString();
         return query_string ? `${url}?${query_string}` : url;
+    }
+
+    _get_no_cache_headers() {
+        return {
+            "Cache-Control": "no-cache, no-store, max-age=0",
+            "Pragma": "no-cache"
+        };
     }
 
     _send(url, options) {
