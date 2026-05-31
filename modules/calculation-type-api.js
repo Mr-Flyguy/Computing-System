@@ -13,6 +13,16 @@ function build_url(url, params = {}) {
     return query_string ? `${url}?${query_string}` : url;
 }
 
+function get_no_cache_options() {
+    return {
+        cache: "no-store",
+        headers: {
+            "Cache-Control": "no-cache, no-store, max-age=0",
+            "Pragma": "no-cache"
+        }
+    };
+}
+
 async function fetch_json(url, options = {}) {
     try {
         const response = await fetch(url, options);
@@ -43,11 +53,17 @@ function json_options(method, data) {
 }
 
 export async function get_calculation_types(filters = {}) {
-    return fetch_json(build_url(BASE_URL, filters));
+    return fetch_json(
+        build_url(BASE_URL, { ...filters, cache_buster: Date.now() }),
+        get_no_cache_options()
+    );
 }
 
 export async function get_calculation_type_by_id(id) {
-    return fetch_json(`${BASE_URL}/${id}`);
+    return fetch_json(
+        build_url(`${BASE_URL}/${id}`, { cache_buster: Date.now() }),
+        get_no_cache_options()
+    );
 }
 
 export async function create_calculation_type(data) {
