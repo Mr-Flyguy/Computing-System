@@ -2,12 +2,12 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const calculation_type_router = require("./routes/calculation_type");
-const calculation_type_store = require("./services/calculationTypeService");
+const calculation_type_store = require("./models/calculationTypeStore");
 
 const app = express();
 const PORT = 3000;
 
-const data_file_path = path.join(__dirname, "data/requests.json");
+const data_file_path = path.join(__dirname, "data/calculation-types.json");
 const frontend_public_path = path.resolve(__dirname, "../../public");
 const frontend_index_path = path.join(frontend_public_path, "index.html");
 const has_frontend_build = fs.existsSync(frontend_index_path);
@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
         return res.sendFile(frontend_index_path);
     }
 
-    return res.send("API для услуг вычислений работает");
+    return res.send("API для типов вычислений работает");
 });
 
 app.listen(PORT, () => {

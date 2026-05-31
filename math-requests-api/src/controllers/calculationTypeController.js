@@ -1,13 +1,13 @@
-const calculation_type_store = require("../services/calculationTypeService");
+const calculation_type_store = require("../models/calculationTypeStore");
 
-function validate_request_payload(payload, is_partial = false) {
+function validate_calculation_type_payload(payload, is_partial = false) {
     const { title, description, calculation_type, status, numbers } = payload;
 
     if (!is_partial && (!title || !description || !calculation_type || !status)) {
         return "Не все обязательные поля заполнены";
     }
 
-    // For sum_unique_elements accept either a string or an array (arrays may be nested; service will normalize)
+    // For sum_unique_elements accept either a string or an array (arrays may be nested; store will normalize)
     if (
         calculation_type === "sum_unique_elements" &&
         numbers !== undefined &&
@@ -38,7 +38,7 @@ function get_calculation_type_by_id(req, res) {
 }
 
 function create_calculation_type(req, res) {
-    const validation_error = validate_request_payload(req.body);
+    const validation_error = validate_calculation_type_payload(req.body);
 
     if (validation_error) {
         return res.status(400).json({ error: validation_error });
@@ -50,7 +50,7 @@ function create_calculation_type(req, res) {
 
 function update_calculation_type(req, res) {
     const id = parseInt(req.params.id);
-    const validation_error = validate_request_payload(req.body, true);
+    const validation_error = validate_calculation_type_payload(req.body, true);
 
     if (validation_error) {
         return res.status(400).json({ error: validation_error });

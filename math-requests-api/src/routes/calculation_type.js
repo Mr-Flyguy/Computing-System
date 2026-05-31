@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const calculation_type_controller = require("../controllers/requestsController");
+const calculation_type_controller = require("../controllers/calculationTypeController");
 
 router.get("/", calculation_type_controller.get_all_calculation_types);
 router.get("/:id", calculation_type_controller.get_calculation_type_by_id);
