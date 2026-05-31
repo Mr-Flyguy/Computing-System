@@ -65,6 +65,7 @@ export class CalculationTypeCardComponent {
 
                         <div class="calculation-type-card-actions mt-auto">
                             <div id="calculation_type-open-button-${calculation_type_data.id}" class="calculation-type-card-action"></div>
+                            <div id="calculation_type-edit-button-${calculation_type_data.id}" class="calculation-type-card-action"></div>
                             <div id="calculation_type-delete-button-${calculation_type_data.id}" class="calculation-type-card-action"></div>
                         </div>
                     </div>
@@ -73,11 +74,12 @@ export class CalculationTypeCardComponent {
         `;
     }
 
-    render(calculation_type_data, open_listener, delete_listener) {
+    render(calculation_type_data, open_listener, edit_listener, delete_listener) {
         const html = this.getHTML(calculation_type_data);
         this.parent.insertAdjacentHTML("beforeend", html);
 
         const open_button_root = document.getElementById(`calculation_type-open-button-${calculation_type_data.id}`);
+        const edit_button_root = document.getElementById(`calculation_type-edit-button-${calculation_type_data.id}`);
         const delete_button_root = document.getElementById(`calculation_type-delete-button-${calculation_type_data.id}`);
 
         const open_button = new ButtonComponent(open_button_root);
@@ -89,6 +91,16 @@ export class CalculationTypeCardComponent {
         );
 
         document.getElementById(`calculation_type-open-${calculation_type_data.id}`).dataset.id = calculation_type_data.id;
+
+        const edit_button = new ButtonComponent(edit_button_root);
+        edit_button.render(
+            "Редактировать",
+            `calculation_type-edit-${calculation_type_data.id}`,
+            edit_listener,
+            "btn btn-outline-danger pm-btn-outline-danger w-100"
+        );
+
+        document.getElementById(`calculation_type-edit-${calculation_type_data.id}`).dataset.id = calculation_type_data.id;
 
         const delete_button = new ButtonComponent(delete_button_root);
         delete_button.render(

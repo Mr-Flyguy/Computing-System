@@ -1,8 +1,6 @@
 import { CalculationTypeDetailsComponent } from "../../components/calculation-type-details/index.js";
 import { CalculationTypeHeaderComponent } from "../../components/calculation-type-header/index.js";
-import { ButtonComponent } from "../../components/button/index.js";
 import { MainPage } from "../main/index.js";
-import { CalculationTypeFormPage } from "../calculation-type-form/index.js";
 import { get_calculation_type_by_id } from "../../modules/calculation-type-api.js";
 
 export class CalculationTypePage {
@@ -25,11 +23,6 @@ export class CalculationTypePage {
     click_home() {
         const main_page = new MainPage(this.parent);
         main_page.render();
-    }
-
-    open_edit_page() {
-        const form_page = new CalculationTypeFormPage(this.parent, "edit", this.id, this.calculation_type_data);
-        form_page.render();
     }
 
     async render() {
@@ -56,23 +49,6 @@ export class CalculationTypePage {
 
         const calculation_type_details_component = new CalculationTypeDetailsComponent(this.page_root);
         calculation_type_details_component.render(calculation_type);
-
-        this.page_root.insertAdjacentHTML(
-            "beforeend",
-            `
-                <div class="calculation-type-actions">
-                    <div id="edit-calculation-type-button" class="calculation-type-action-item"></div>
-                </div>
-            `
-        );
-
-        const edit_button = new ButtonComponent(document.getElementById("edit-calculation-type-button"));
-        edit_button.render(
-            "Редактировать",
-            "edit-calculation-type-action",
-            this.open_edit_page.bind(this),
-            "btn btn-outline-danger pm-btn-outline-danger"
-        );
     }
 
     async load_calculation_type() {
