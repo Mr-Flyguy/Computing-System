@@ -31,40 +31,40 @@ body {
     margin: 0;
 }
 
-.service-search-block {
+.calculation-type-search-block {
     margin-top: 24px;
 }
 
-.service-search-inline-block {
+.calculation-type-search-inline-block {
     margin-top: 0;
     margin-bottom: 20px;
 }
 
-.service-search-label {
+.calculation-type-search-label {
     display: block;
     margin-bottom: 10px;
     font-weight: 700;
 }
 
-.service-search-input {
+.calculation-type-search-input {
     border-radius: 16px;
     min-height: 52px;
     border: 1px solid #e5e5e5;
     padding: 0 18px;
 }
 
-.service-search-input:focus {
+.calculation-type-search-input:focus {
     border-color: #d82d3e;
     box-shadow: 0 0 0 0.2rem rgba(216, 45, 62, 0.15);
 }
 
-.request-search-row {
+.calculation-type-search-row {
     display: flex;
     gap: 12px;
     align-items: center;
 }
 
-.request-counter {
+.calculation-type-counter-badge {
     background: #fff1f2;
     color: #be1e2d;
     border-radius: 20px;
@@ -73,7 +73,7 @@ body {
     font-weight: 700;
 }
 
-.request-card {
+.calculation-type-card {
     border: none;
     border-radius: 24px;
     background: #ffffff;
@@ -82,34 +82,34 @@ body {
     overflow: hidden;
 }
 
-.request-card-image {
+.calculation-type-card-image {
     width: 100%;
     height: 220px;
     object-fit: cover;
     display: block;
 }
 
-.request-card .card-body {
+.calculation-type-card .card-body {
     padding: 24px;
 }
 
-.request-title {
+.calculation-type-title {
     font-size: 22px;
     font-weight: 700;
     margin-bottom: 12px;
 }
 
-.request-text {
+.calculation-type-text {
     color: #666666;
     margin-bottom: 16px;
 }
 
-.request-meta {
+.calculation-type-meta {
     color: #444444;
     margin-bottom: 10px;
 }
 
-.request-info {
+.calculation-type-info {
     background: #f3f3f3;
     border-radius: 999px;
     display: inline-block;
@@ -118,7 +118,7 @@ body {
     font-size: 14px;
 }
 
-.request-status {
+.calculation-type-status {
     display: inline-block;
     background: #fff1f2;
     color: #be1e2d;
@@ -152,7 +152,7 @@ body {
     font-weight: 700;
 }
 
-.service-page-card {
+.calculation-type-page-card {
     background: #ffffff;
     border-radius: 28px;
     padding: 28px;
@@ -160,30 +160,30 @@ body {
     margin-bottom: 24px;
 }
 
-.service-request-form-block {
+.calculation_type-calculation-type-form-block {
     background: #ffffff;
     border-radius: 24px;
     padding: 0;
 }
 
-.service-request-form-block textarea,
-.service-request-form-block input,
-.service-request-form-block select {
+.calculation_type-calculation-type-form-block textarea,
+.calculation_type-calculation-type-form-block input,
+.calculation_type-calculation-type-form-block select {
     border-radius: 14px;
 }
 
-.request-history-block {
+.calculation-type-history-block {
     margin-top: 24px;
 }
 
-.request-history-empty {
+.calculation-type-empty {
     background: #f3f3f3;
     border-radius: 18px;
     padding: 18px;
     color: #666666;
 }
 
-.request-error {
+.calculation-type-error {
     background: #fff1f2;
     border: 1px solid #f3c7cd;
     border-radius: 18px;
@@ -192,62 +192,62 @@ body {
     margin-bottom: 24px;
 }
 
-.request-actions {
+.calculation-type-actions {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
     margin-bottom: 20px;
 }
 
-.request-action-item {
+.calculation-type-action-item {
     display: inline-flex;
 }
 
-.request-detail-grid {
+.calculation-type-detail-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 16px;
     margin-bottom: 24px;
 }
 
-.request-detail-item {
+.calculation-type-detail-item {
     background: #fff1f2;
     border-radius: 18px;
     padding: 18px;
 }
 
-.request-detail-label {
+.calculation-type-detail-label {
     color: #666666;
     font-size: 14px;
     margin-bottom: 8px;
 }
 
-.request-detail-value {
+.calculation-type-detail-value {
     font-size: 20px;
     font-weight: 700;
 }
 
-.request-detail-value-text {
+.calculation-type-detail-value-text {
     font-size: 16px;
     line-height: 1.4;
 }
 
-.request-media {
+.calculation-type-media {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     margin-bottom: 24px;
 }
 
-.request-image-block,
-.request-model-block {
+.calculation-type-image-block,
+.calculation-type-model-block {
     background: #ffffff;
     border-radius: 24px;
     padding: 16px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-.request-image {
+.calculation-type-image {
     width: 100%;
     height: 320px;
     object-fit: cover;
@@ -255,7 +255,7 @@ body {
     display: block;
 }
 
-.request-model-viewer {
+.calculation-type-model-viewer {
     width: 100%;
     height: 320px;
     border-radius: 18px;
@@ -272,12 +272,12 @@ body {
     font-weight: 700;
 }
 
-.request-extra-grid {
+.calculation-type-extra-grid {
     display: grid;
     gap: 12px;
 }
 
-.request-extra-item {
+.calculation-type-extra-item {
     display: flex;
     justify-content: space-between;
     gap: 16px;
@@ -287,33 +287,33 @@ body {
     background: #ffffff;
 }
 
-.request-extra-key {
+.calculation-type-extra-key {
     color: #666666;
     font-weight: 700;
 }
 
-.request-extra-value {
+.calculation-type-extra-value {
     color: #222222;
     text-align: right;
     word-break: break-word;
 }
 
-.request-extra-value-left {
+.calculation-type-extra-value-left {
     text-align: left;
 }
 
-.request-extra-muted {
+.calculation-type-extra-muted {
     margin-top: 8px;
     color: #666666;
 }
 
-.request-extra-result {
+.calculation-type-extra-result {
     margin-top: 10px;
     font-weight: 700;
     color: #be1e2d;
 }
 
-.request-extra-actions {
+.calculation-type-extra-actions {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -321,24 +321,24 @@ body {
 }
 
 @media (max-width: 768px) {
-    .request-media {
+    .calculation-type-media {
         grid-template-columns: 1fr;
     }
 
-    .request-search-row {
+    .calculation-type-search-row {
         flex-direction: column;
         align-items: stretch;
     }
 
-    .request-extra-item {
+    .calculation-type-extra-item {
         flex-direction: column;
     }
 
-    .request-actions {
+    .calculation-type-actions {
         flex-direction: column;
     }
 
-    .request-extra-actions {
+    .calculation-type-extra-actions {
         align-items: flex-start;
     }
 }

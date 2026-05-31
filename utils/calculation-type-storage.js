@@ -1,4 +1,4 @@
-import { initial_calculation_types } from "../data/services.js";
+import { initial_calculation_types } from "../data/calculation-types.js";
 
 const calculation_types = initial_calculation_types.map((calculation_type) => ({ ...calculation_type }));
 
