@@ -11,6 +11,31 @@ body {
     padding: 40px 20px;
 }
 
+.calculation-type-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+    padding: 14px 18px;
+}
+
+.calculation-type-home-button {
+    background: #fff1f2;
+    border: 1px solid #f3c7cd;
+    border-radius: 999px;
+    color: #be1e2d;
+    font-weight: 700;
+    padding: 10px 18px;
+}
+
+.calculation-type-home-button:hover {
+    background: #ffe4e8;
+}
+
 .hero-block {
     background: #ffffff;
     border-radius: 28px;

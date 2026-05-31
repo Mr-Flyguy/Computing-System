@@ -1,5 +1,6 @@
 import { CalculationTypeCardComponent } from "../../components/calculation-type-card/index.js";
 import { ButtonComponent } from "../../components/button/index.js";
+import { CalculationTypeHeaderComponent } from "../../components/calculation-type-header/index.js";
 import { CalculationTypePage } from "../calculation-type/index.js";
 import {
     create_calculation_type_copy_from_first,
@@ -31,6 +32,10 @@ export class MainPage {
 
     get add_calculation_type_button_root() {
         return document.getElementById("add-calculation-type-button");
+    }
+
+    get page_root() {
+        return document.getElementById("main-page");
     }
 
     get_filtered_calculation_types() {
@@ -136,6 +141,10 @@ export class MainPage {
     render() {
         this.parent.innerHTML = "";
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
+
+        const calculation_type_header = new CalculationTypeHeaderComponent(this.page_root);
+        calculation_type_header.render(() => {}, true);
+
         this.search_input.addEventListener("input", this.handle_search.bind(this));
 
         const add_calculation_type_button = new ButtonComponent(this.add_calculation_type_button_root);
