@@ -1,5 +1,5 @@
 import { ServiceDetailsComponent } from "../../components/service-details/index.js";
-import { BackButtonComponent } from "../../components/back-button/index.js";
+import { ServiceHeaderComponent } from "../../components/service-header/index.js";
 import { MainPage } from "../main/index.js";
 import { get_service_by_id } from "../../utils/service-storage.js";
 
@@ -19,7 +19,7 @@ export class ServicePage {
         `;
     }
 
-    click_back() {
+    click_home() {
         const main_page = new MainPage(this.parent);
         main_page.render();
     }
@@ -28,8 +28,8 @@ export class ServicePage {
         this.parent.innerHTML = "";
         this.parent.insertAdjacentHTML("beforeend", this.getHTML());
 
-        const back_button = new BackButtonComponent(this.page_root);
-        back_button.render(this.click_back.bind(this));
+        const service_header = new ServiceHeaderComponent(this.page_root);
+        service_header.render("Лабораторная работа", this.click_home.bind(this));
 
         const service = get_service_by_id(this.id);
 
