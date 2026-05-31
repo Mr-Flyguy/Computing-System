@@ -11,6 +11,7 @@ const data_file_path = path.join(__dirname, "data/calculation-types.json");
 calculation_type_store.init(data_file_path);
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
