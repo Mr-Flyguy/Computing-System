@@ -1,4 +1,6 @@
 import { ButtonComponent } from "../button/index.js";
+import { factorial, gcd, solveExpression } from "../../utils/calculations.js";
+import { isPalindrom, sumOfUniqueElements } from "../../utils/text-and-array-calculations.js";
 
 export class ServiceCardComponent {
     constructor(parent) {
@@ -21,7 +23,32 @@ export class ServiceCardComponent {
         return "Массивы";
     }
 
+    getExampleText(service_data) {
+        const type = service_data.calculation_type;
+
+        if (type === "factorial") {
+            return `5! = ${factorial(5)}`;
+        }
+
+        if (type === "gcd") {
+            return `НОД(24, 18) = ${gcd(24, 18)}`;
+        }
+
+        if (type === "sum_unique_elements") {
+            return `[1,2,3,2,4] → ${sumOfUniqueElements("1,2,3,2,4")}`;
+        }
+
+        if (type === "solve_expression") {
+            return `выражение 2*x+3 при x=2 → ${solveExpression("2*x+3", 2)}`;
+        }
+
+        return "";
+    }
+
     getHTML(service_data) {
+        const example = this.getExampleText(service_data);
+        const palindromeStatus = isPalindrom(service_data.title) ? "да" : "нет";
+
         return `
             <div class="col">
                 <div class="card request-card">
@@ -38,6 +65,8 @@ export class ServiceCardComponent {
 
                         <h5 class="request-title">${service_data.title}</h5>
                         <p class="request-text">${service_data.description}</p>
+                        <p class="request-text mb-1">Название-палиндром: ${palindromeStatus}</p>
+                        ${example ? `<p class="request-example-label mb-0">Пример:</p><p class="request-example text-muted mb-2">${example}</p>` : ``}
 
                         <div class="mt-auto">
                             <div id="request-delete-button-${service_data.id}" class="w-100 mb-2"></div>

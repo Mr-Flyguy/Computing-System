@@ -2,9 +2,9 @@ import { ServiceCardComponent } from "../../components/service-card/index.js";
 import { ButtonComponent } from "../../components/button/index.js";
 import { ServicePage } from "../service/index.js";
 import {
-    create_service_copy_from_first,
-    get_services,
-    remove_service_by_id
+    create_calculation_type_copy_from_first,
+    get_calculation_types,
+    remove_calculation_type_by_id
 } from "../../utils/service-storage.js";
 
 export class MainPage {
@@ -34,7 +34,7 @@ export class MainPage {
     }
 
     get_filtered_services() {
-        const services = get_services();
+        const services = get_calculation_types();
         const normalized_query = this.search_query.trim().toLowerCase();
 
         if (!normalized_query) {
@@ -47,7 +47,7 @@ export class MainPage {
     }
 
     getHTML() {
-        const services = get_services();
+        const services = get_calculation_types();
         const filtered_services = this.get_filtered_services();
 
         return `
@@ -105,18 +105,18 @@ export class MainPage {
     }
 
     add_service() {
-        create_service_copy_from_first();
+        create_calculation_type_copy_from_first();
         this.update_service_list();
     }
 
     delete_service(event) {
         const service_id = Number(event.target.dataset.id);
-        remove_service_by_id(service_id);
+        remove_calculation_type_by_id(service_id);
         this.update_service_list();
     }
 
     update_service_list() {
-        const services = get_services();
+        const services = get_calculation_types();
         const filtered_services = this.get_filtered_services();
         this.request_list_root.innerHTML = "";
 
