@@ -97,6 +97,12 @@ export class MainPage {
         calculation_type_page.render();
     }
 
+    edit_card(event) {
+        const calculation_type_id = Number(event.currentTarget.dataset.id);
+        const calculation_type_page = new CalculationTypePage(this.parent, calculation_type_id);
+        calculation_type_page.open_edit_page();
+    }
+
     async delete_card(event) {
         const calculation_type_id = Number(event.currentTarget.dataset.id);
         const { status } = await delete_calculation_type(calculation_type_id);
@@ -182,6 +188,7 @@ export class MainPage {
             calculation_type_card.render(
                 calculation_type_data,
                 this.click_card.bind(this),
+                this.edit_card.bind(this),
                 this.delete_card.bind(this)
             );
         });

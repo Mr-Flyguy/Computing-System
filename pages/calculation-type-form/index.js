@@ -96,7 +96,7 @@ export class CalculationTypeFormPage {
                                 <option value="gcd" ${this.get_selected("gcd")}>НОД</option>
                                 <option value="sum_of_squares" ${this.get_selected("sum_of_squares")}>Сумма квадратов</option>
                                 <option value="sum_unique_elements" ${this.get_selected("sum_unique_elements")}>Сумма уникальных элементов</option>
-                                <option value="solve" ${this.get_selected("solve")}>Вычисление выражения</option>
+                                <option value="solve_expression" ${this.get_selected("solve_expression")}>Вычисление выражения</option>
                             </select>
                         </div>
 
