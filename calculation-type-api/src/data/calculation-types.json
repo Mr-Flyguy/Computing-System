@@ -21,7 +21,7 @@
     "id": 4,
     "title": "Вычисление выражения",
     "description": "Вычислить значение выражения при заданном x",
-    "calculation_type": "factorial"
+    "calculation_type": "solve_expression"
   },
   {
     "id": 5,
